@@ -10,9 +10,9 @@ deployment:
   production:
     branch: master
     commands:
-      - docker login -e e_ariel@hotmail.es -u nightmareze1 -p Eze123456!
-      - docker build -t nightmareze1/getantibody:$CIRCLE_BUILD_NUM .
-      - docker push nightmareze1/getantibody:$CIRCLE_BUILD_NUM
+      - docker login -e earielli@itshell.org -u vikingo -p vikingo1234!
+      - docker build -t vikingo/alpine:$CIRCLE_BUILD_NUM .
+      - docker push vikingo/alpine:$CIRCLE_BUILD_NUM
       - sed -i'' -e "s;%BUILD_NUM%;$CIRCLE_BUILD_NUM;g" ./.deploy/Dockerrun.aws.json
       - cd .deploy && eb init -r us-east-1 getantibody
       - cd .deploy && eb deploy -l $CIRCLE_BUILD_NUM
