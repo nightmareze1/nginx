@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alpine
+spec:
+  rules:
+  - host: alpine.itshellws.org
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: alpine
+          servicePort: 80

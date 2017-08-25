@@ -1,0 +1,68 @@
+variables:
+ GIT_SSL_NO_VERIFY: "true"
+ IMAGE_NAME: git.itshellws.org:4567/root/alpine
+
+build:
+    image: docker:git
+    services:
+        - docker:dind
+    stage: build
+    cache:
+    script:
+        - docker version
+        - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" project.clj
+        - docker build --pull -t $IMAGE_NAME:$(echo $CI_BUILD_REF | cut -c 1-7) .
+        - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN git.itshellws.org:4567
+        - docker push $IMAGE_NAME:$(echo $CI_BUILD_REF | cut -c 1-7)
+    only:
+        - master
+        
+k8s-deploy-dev:
+    image: lwolf/kubectl_deployer:latest
+    services:
+        - docker:dind
+    stage: deploy
+    script:
+        - kubectl config set-cluster my-cluster --server=http://10.80.100.10:8080 --insecure-skip-tls-verify=true
+        - kubectl config set-credentials root --password=1
+        - kubectl config set-context default-context --cluster=my-cluster --user=root
+        - kubectl config use-context default-context
+        - kubectl delete secret myregistrykey
+        - kubectl create secret docker-registry myregistrykey --docker-server=git.itshellws.org:4567 --docker-username=root --docker-password=vikingo1234! --docker-email=e_ariel@hotmail.es
+        - kubectl get cs
+        - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" template/deployment.yml
+        - kubectl apply -f template/deployment.yml
+        - kubectl apply -f template/svc.yml
+        - kubectl apply -f template/ing.yml
+        
+    environment:
+      name: default
+      url: http://alpine.itshellws.org
+    only:
+    - master
+    
+k8s-deploy-PRODUCCION:
+    image: lwolf/kubectl_deployer:latest
+    services:
+        - docker:dind
+    stage: deploy
+    script:
+        - kubectl config set-cluster my-cluster --server=http://10.80.100.10:8080 --insecure-skip-tls-verify=true
+        - kubectl config set-credentials root --password=1
+        - kubectl config set-context default-context --cluster=my-cluster --user=root
+        - kubectl config use-context default-context
+        - kubectl delete secret myregistrykey
+        - kubectl create secret docker-registry myregistrykey --docker-server=git.itshellws.org:4567 --docker-username=root --docker-password=vikingo1234! --docker-email=e_ariel@hotmail.es
+        - kubectl get cs
+        - sed -i "s/<VERSION>/$(echo $CI_BUILD_REF | cut -c 1-7)/" template/deployment.yml
+        - kubectl apply -f template/deployment.yml
+        - kubectl apply -f template/svc.yml
+        - kubectl apply -f template/ing.yml
+        
+    environment:
+      name: prod
+      url: http://alpine-pro.itshellws.org
+    when: manual
+    only:
+    - master
+
