@@ -1,12 +1,5 @@
 #!/bin/bash
 
-set -e
-
-REPO
-DOCKER_EMAIL
-DOCKER_USER
-DOCKER_PASS
-
 # Usage prints the help for this command.
 usage() {
   echo "Usage:"
