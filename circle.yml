@@ -1,18 +1,24 @@
 machine:
-  python:
-   version: 2.7
   services:
     - docker
+
 dependencies:
   pre:
-    - pip install awsebcli
+    - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
+    - chmod +x /home/ubuntu/bin/docker-build
+  override:
+    - docker-build pull || true
+    - docker-build build
+
+test:
+  override:
+    - "true"
+
 deployment:
-  production:
-    branch: master
+  github_release:
+    tag: /v[0-9]+(\.[0-9]+)*/
     commands:
-      - docker login -e earielli@itshell.org -u vikingo -p vikingo1234!
-      - docker build -t vikingo/alpine:$CIRCLE_BUILD_NUM .
-      - docker push vikingo/alpine:$CIRCLE_BUILD_NUM
-      - sed -i'' -e "s;%BUILD_NUM%;$CIRCLE_BUILD_NUM;g" ./.deploy/Dockerrun.aws.json
-      - cd .deploy && eb init -r us-east-1 getantibody
-      - cd .deploy && eb deploy -l $CIRCLE_BUILD_NUM
+      - docker-build push
+      - docker images
+
+
