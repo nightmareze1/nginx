@@ -9,8 +9,6 @@ dependencies:
   override:
     - docker-build pull || true
     - docker-build build
-    - docker-build push
-    - docker images
 
 test:
   override:
