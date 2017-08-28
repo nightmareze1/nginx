@@ -14,14 +14,12 @@ test:
   override:
     - "true"
 
-deployment_dockerhub:
+deployment:
   github_release:
     tag: /v[0-9]+(\.[0-9]+)*/
     commands:
       - docker-build push
       - docker images
-
-deployment_aws_ecr:
   dockerhub_release:
     tag: /a[0-9]+(\.[0-9]+)*/
     commands:
