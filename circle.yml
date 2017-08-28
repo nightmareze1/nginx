@@ -1,6 +1,7 @@
-machine:
-  docker:
-    version: 17.06.0-ce
+jobs:
+  build:
+    machine:
+      image: circleci/classic:latest
   python;
     version: 2.7.3
   services:
