@@ -1,9 +1,14 @@
 machine:
+  docker:
+    version: 17.06.0-ce
+  python;
+    version: 2.7.3
   services:
     - docker
 
 dependencies:
   pre:
+    - pip install awscli
     - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
     - chmod +x /home/ubuntu/bin/docker-build
   override:
