@@ -9,7 +9,7 @@ usage() {
   echo ""
   echo "Commands:"
   echo "    build  Build a docker image from this repo and tag it with the git sha and branch"
-  echo "    push   Push the built image to the docker registry. \$DOCKER_EMAIL, \$DOCKER_USER, and \$DOCKER_PASS are required"
+  echo "    push   Push the built image to the docker registry. \$DOCKER_USER, and \$DOCKER_PASS are required"
   exit 1
 }
 
@@ -24,11 +24,11 @@ build() {
 push() {
   declare repo="$1" tag="$CIRCLE_TAG"
 
-  if [ -z "$DOCKER_EMAIL" ] || [ -z "$DOCKER_USER" ] || [ -z "$DOCKER_PASS" ]; then
+  if [ -z "$DOCKER_USER" ] || [ -z "$DOCKER_PASS" ]; then
     usage
   fi
 
-  docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
+  docker login -e -u "$DOCKER_USER" -p "$DOCKER_PASS"
   docker push "$repo:$tag"
 }
 
