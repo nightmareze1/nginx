@@ -27,5 +27,4 @@ deployment:
     commands:
       - aws ecr get-login --region us-east-1|bash
       - docker images
-      - docker-build push
-
+      - docker push "$repo:$tag"
