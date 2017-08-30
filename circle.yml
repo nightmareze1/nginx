@@ -9,23 +9,17 @@ jobs:
           name: Run tests
           command: |
             docker version
-            mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
+
+  test:
+    docker:
+      image: circleci/classic:201707-01
+     steps:
+      - checkout 
+      - run:
+          name: 
+          command: |  
+            mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
             chmod +x /home/ubuntu/bin/docker-build
             docker-build pull || true
             docker-build build
-
-      deployment:
-        github_release:
-          tag: /v[0-9]+(\.[0-9]+)*/
-          commands:
-           - docker-build push
-           - docker images
-        dockerhub_release:
-          tag: /a[0-9]+(\.[0-9]+)*/
-          commands:
-            - docker-build push
-            - docker images
-
-
-
 
