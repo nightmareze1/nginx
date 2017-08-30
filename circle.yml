@@ -5,24 +5,14 @@ jobs:
       image: circleci/classic:201707-01
     steps:
       - checkout
-
       - run:
           name: Run tests
           command: |
             docker version
-
-      dependencies:
-        pre:
-          - docker version
-          - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
-          - chmod +x /home/ubuntu/bin/docker-build
-      override:
-          - docker-build pull || true
-          - docker-build build
-
-      test:
-        override:
-          - "true"
+            mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
+            chmod +x /home/ubuntu/bin/docker-build
+            docker-build pull || true
+            docker-build build
 
       deployment:
         github_release:
