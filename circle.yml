@@ -13,7 +13,6 @@ jobs:
           name: Publish to Docker Hub
           command: |
             apk add --no-cache docker
-            docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASSWORD}
             mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
             chmod +x /home/ubuntu/bin/docker-build
             docker-build pull || true
