@@ -9,15 +9,6 @@ jobs:
           name: Run tests
           command: |
             docker version
-
-  test:
-    docker:
-      image: circleci/classic:201707-01
-     steps:
-      - checkout 
-      - run:
-          name: 
-          command: |  
             mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
             chmod +x /home/ubuntu/bin/docker-build
             docker-build pull || true
