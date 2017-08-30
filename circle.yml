@@ -11,30 +11,30 @@ jobs:
           command: |
             docker version
 
-dependencies:
-  pre:
-    - docker version
-    - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
-    - chmod +x /home/ubuntu/bin/docker-build
-  override:
-    - docker-build pull || true
-    - docker-build build
+      dependencies:
+        pre:
+          - docker version
+          - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
+          - chmod +x /home/ubuntu/bin/docker-build
+      override:
+          - docker-build pull || true
+          - docker-build build
 
-test:
-  override:
-    - "true"
+      test:
+        override:
+          - "true"
 
-deployment:
-  github_release:
-    tag: /v[0-9]+(\.[0-9]+)*/
-    commands:
-      - docker-build push
-      - docker images
-  dockerhub_release:
-    tag: /a[0-9]+(\.[0-9]+)*/
-    commands:
-      - docker-build push
-      - docker images
+      deployment:
+        github_release:
+          tag: /v[0-9]+(\.[0-9]+)*/
+          commands:
+           - docker-build push
+           - docker images
+        dockerhub_release:
+          tag: /a[0-9]+(\.[0-9]+)*/
+          commands:
+            - docker-build push
+            - docker images
 
 
 
