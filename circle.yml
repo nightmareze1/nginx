@@ -1,8 +1,8 @@
 machine:
-   services:
-     - docker
- 
- dependencies:
+ services:
+   - docker
+
+dependencies:
    pre:
      - docker version
      - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
@@ -11,20 +11,20 @@ machine:
      - docker-build pull || true
      - docker-build build
  
- test:
-   override:
-     - "true"
+test:
+  override:
+    - "true"
  
- deployment:
-   github_release:
-     tag: /v[0-9]+(\.[0-9]+)*/
-     commands:
-       - docker-build push
-       - docker images
-   dockerhub_release:
-     tag: /a[0-9]+(\.[0-9]+)*/
-     commands:
-       - aws ecr get-login --no-include-email --region us-east-1|bash
-       - docker images
-       - docker push
+deployment:
+  github_release:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    commands:
+      - docker-build push
+      - docker images
+  dockerhub_release:
+    tag: /a[0-9]+(\.[0-9]+)*/
+    commands:
+      - aws ecr get-login --no-include-email --region us-east-1|bash
+      - docker images
+      - docker push
 
