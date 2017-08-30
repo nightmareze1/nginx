@@ -27,4 +27,5 @@ deployment:
     commands:
       - aws ecr get-login --region us-east-1|bash
       - docker images
-      - docker push $REPO
+      - docker tag $REPO 412865213072.dkr.ecr.us-east-1.amazonaws.com/alpine:latest
+      - docker push 412865213072.dkr.ecr.us-east-1.amazonaws.com/alpine:latest
