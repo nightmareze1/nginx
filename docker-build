@@ -28,7 +28,7 @@ push() {
     usage
   fi
 
-  docker login -e -u "$DOCKER_USER" -p "$DOCKER_PASS"
+  docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
   docker push "$repo:$tag"
 }
 
