@@ -12,7 +12,6 @@ jobs:
       - deploy:
           name: Publish to Docker Hub
           command: |
-            apk add --no-cache docker
             mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
             chmod +x /home/ubuntu/bin/docker-build
             docker-build pull || true
