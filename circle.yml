@@ -27,5 +27,5 @@ deployment:
     commands:
       - aws ecr get-login --region us-east-1|bash
       - docker images
-      - docker push
+      - docker-build push
 
