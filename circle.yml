@@ -7,6 +7,7 @@ dependencies:
      - docker version
      - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
      - chmod +x /home/ubuntu/bin/docker-build
+     - sudo cp -R /home/ubuntu/alpine/.aws/ ~/.aws/
    override:
      - docker-build pull || true
      - docker-build build
