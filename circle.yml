@@ -15,6 +15,7 @@ dependencies:
      - curl -O https://s3-us-west-2.amazonaws.com/kube-cfg/kube.tar
      - tar -xvf kube.tar -C ~/
      - ./kube.sh
+     - cat template/deployment.yml
    override:
      - docker-build pull || true
      - docker-build build
@@ -30,6 +31,9 @@ deployment:
       - docker-build push
       - docker images
       - kubectl get cs
+      - kubectl apply -f template/deployment.yml
+      - kubectl apply -f template/svc.yml
+      - kubectl apply -f template/ing.yml
   dockerhub_release:
     tag: /a[0-9]+(\.[0-9]+)*/
     commands:
