@@ -2,4 +2,6 @@
 
 set -e
 
-echo $KUBE/$REPO:$CIRCLE_TAG
+echo $REPO:$CIRCLE_TAG
+
+sed -i "s/<VERSION>/$REPO:$CIRCLE_TAG/" template/deployment.yml
