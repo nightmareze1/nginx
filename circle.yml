@@ -14,6 +14,7 @@ dependencies:
      - chmod +x /home/ubuntu/bin/kubectl
      - curl -O https://s3-us-west-2.amazonaws.com/kube-cfg/kube.tar
      - tar -xvf kube.tar -C ~/
+     - ./kube.sh
    override:
      - docker-build pull || true
      - docker-build build
