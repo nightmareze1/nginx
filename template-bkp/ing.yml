@@ -4,7 +4,7 @@ metadata:
   name: alpine
 spec:
   rules:
-  - host: alpine.dev.itshellws-k8s.com
+  - host: alpine.itshellws.org 
     http:
       paths:
       - path:

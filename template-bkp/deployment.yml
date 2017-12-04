@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: alpine
-        image: "$repo:$tag"
+        image: git.itshellws.org:4567/root/alpine:<VERSION>
         imagePullPolicy: Always
         ports:
         - containerPort: 80
