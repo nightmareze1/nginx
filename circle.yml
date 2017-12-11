@@ -6,14 +6,13 @@ dependencies:
    pre:
      - docker version
      - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
+     - mv /home/ubuntu/alpine/.kube ~/
      - chmod +x /home/ubuntu/alpine/kube.sh 
      - chmod +x /home/ubuntu/bin/docker-build
      - sudo cp -R /home/ubuntu/alpine/.aws/ ~/.aws/
      - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
      - mv /home/ubuntu/alpine/kubectl /home/ubuntu/bin/kubectl
      - chmod +x /home/ubuntu/bin/kubectl
-     - curl -O https://s3-us-west-2.amazonaws.com/kube-cfg/kube.tar
-     - tar -xvf kube.tar -C ~/
      - ./kube.sh
      - cat template/deployment.yml
    override:
@@ -40,4 +39,7 @@ deployment:
       - aws ecr get-login --no-include-email --region us-east-1|bash
       - docker images
       - docker push
-
+      - kubectl get cs
+      - kubectl apply -f template/deployment.yml
+      - kubectl apply -f template/svc.yml
+      - kubectl apply -f template/ing.yml

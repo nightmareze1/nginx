@@ -5,7 +5,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80
+    - nodePort: 31608
+      port: 80
       targetPort: 80
   selector:
     app: alpine
