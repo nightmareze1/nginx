@@ -22,10 +22,13 @@ deployment:
     commands:
       - docker-build push
       - docker images
+      - wget https://github.com/tcnksm/ghr/releases/download/v0.5.2/ghr_v0.5.2_linux_amd64.zip && unzip ghr_v0.5.2_linux_amd64.zip
+      - ./ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME $CIRCLE_TAG
   dockerhub_release:
     tag: /a[0-9]+(\.[0-9]+)*/
     commands:
       - aws ecr get-login --no-include-email --region us-east-1|bash
       - docker images
       - docker push
-
+      - wget https://github.com/tcnksm/ghr/releases/download/v0.5.2/ghr_v0.5.2_linux_amd64.zip && unzip ghr_v0.5.2_linux_amd64.zip
+      - ./ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME $CIRCLE_TAG $CIRCLE_ARTIFACTS
