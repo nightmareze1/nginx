@@ -7,7 +7,7 @@ dependencies:
      - docker version
      - mv /home/ubuntu/alpine/docker-build /home/ubuntu/bin/docker-build
      - mv /home/ubuntu/alpine/.kube ~/
-     - chmod +x /home/ubuntu/alpine/kube.sh 
+     - chmod +x /home/ubuntu/alpine/kube.sh
      - chmod +x /home/ubuntu/bin/docker-build
      - sudo cp -R /home/ubuntu/alpine/.aws/ ~/.aws/
      - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -33,6 +33,10 @@ deployment:
       - cd ../
       - wget https://github.com/tcnksm/ghr/releases/download/v0.5.2/ghr_v0.5.2_linux_amd64.zip && unzip ghr_v0.5.2_linux_amd64.zip
       - ./ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME $CIRCLE_TAG circle.yml
+      - kubectl get cs
+      - kubectl apply -f template/deployment.yml
+      - kubectl apply -f template/svc.yml
+      - kubectl apply -f template/ing.yml
   dockerhub_release:
     tag: /a[0-9]+(\.[0-9]+)*/
     commands:
@@ -41,3 +45,8 @@ deployment:
       - docker push
       - wget https://github.com/tcnksm/ghr/releases/download/v0.5.2/ghr_v0.5.2_linux_amd64.zip && unzip ghr_v0.5.2_linux_amd64.zip
       - ./ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME $CIRCLE_TAG $CIRCLE_ARTIFACTS
+      - kubectl get cs
+      - kubectl apply -f template/deployment.yml
+      - kubectl apply -f template/svc.yml
+      - kubectl apply -f template/ing.yml
+

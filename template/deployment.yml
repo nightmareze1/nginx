@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
       - name: alpine
-        image: <REPO>/<PROJECT>:<VERSION> 
+        image: <REPO>/<PROJECT>:<VERSION>
         imagePullPolicy: Always
         ports:
         - containerPort: 80
