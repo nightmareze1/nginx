@@ -4,7 +4,7 @@ metadata:
   name: alpine
   namespace: default
 spec:
-  replicas: 3
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -21,6 +21,11 @@ spec:
       - name: alpine
         image: <REPO>/<PROJECT>:<VERSION>
         imagePullPolicy: Always
+        env:
+        - name: VARIABLE1
+          value: "My name is Juan and I'm a variable"
+        - name: VARIABLE2
+          value: "My name is Lucho and I'm a variable"
         ports:
         - containerPort: 80
         livenessProbe:
