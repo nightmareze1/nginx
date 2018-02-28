@@ -1,13 +1,19 @@
+# An Ingress with 2 hosts and 3 endpoints
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: alpine
+  annotations:
+    kubernetes.io/tls-acme: "true"
 spec:
+  tls:
+  - hosts:
+    - alpine.dev.itshellws-k8s.com
   rules:
-  - host: alpine.itshellws.org
+  - host: alpine.dev.itshellws-k8s.com
     http:
       paths:
-      - path:
+      - path: /
         backend:
           serviceName: alpine
           servicePort: 80
