@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alpine
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.kubernetes.io/issuer: "letsencrypt-staging"
+    certmanager.kubernetes.io/acme-challenge-type: dns-01
+    certmanager.kubernetes.io/acme-dns-01-provider: route53
+spec:
+  tls:
+  - hosts:
+    - alpine.dev.itshellws-k8s.com
+    secretName: alpine.dev.itshellws-k8s.com-tls
+  rules:
+  - host: alpine.dev.itshellws-k8s.com
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: alpine
+          servicePort: 80
