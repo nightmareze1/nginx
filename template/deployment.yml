@@ -35,6 +35,6 @@ spec:
           initialDelaySeconds: 30 
           timeoutSeconds: 1
       nodeSelector:
-        kops.k8s.io/instancegroup: tn_nodes
+        kops.k8s.io/instancegroup: itshell_nodes
       imagePullSecrets:
         - name: myregistrykey
