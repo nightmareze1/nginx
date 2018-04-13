@@ -28,7 +28,7 @@ pipeline {
                 stage ('Wodpress Nginx'){
                     agent { label 'docker'}
                     steps {
-                        sh "docker build -f Dockerfile -t ${REPO}:${COMMIT}-nginx"
+                        sh "docker build -f Dockerfile -t ${REPO}:${COMMIT}-nginx ."
                     }
                     post {
                         success {
