@@ -40,6 +40,22 @@ pipeline {
 
             }
         }
+        stage ('Run'){
+            parallel {
+                stage ('Micro-Services'){
+                    agent { label 'docker'}
+                    steps {
+                        // Create Network
+                        sh "docker network create wordpress-micro-${BUILD_NUMBER}"
+                        sh "docker run -d --name 'nginx-${BUILD_NUMBER}' --network wordpress-micro-${BUILD_NUMBER} ${REPO}:${COMMIT}-nginx"
+                        // Get container IDs
+                        script {
+                            DOCKER_NGINX = sh(script: "docker ps -qa -f ancestor=${REPO}:${COMMIT}-nginx", returnStdout: true).trim()
+                        }
+                    }
+                }
+            }
+        }
         stage ('Test'){
             parallel {
                 stage ('Micro-Services'){
