@@ -9,14 +9,9 @@ pipeline {
             steps {
                 script {
 		   COMMIT1 = "${GIT_COMMIT.substring(0,8)}"
-                    echo "${COMMIT1}"
-                    if ("${BRANCH_NAME}" == "master"){
-                        TAG   = "latest"
-                        NGINX = "alpine"
-                    }
-                    else {
-                        TAG   = "${BRANCH_NAME}"
-                        NGINX = "${BRANCH_NAME}-nginx"                   
+                   echo "${COMMIT1}"
+                   TAG   = "latest"
+                   NGINX = "alpine"
                     }
                 }
                 sh 'printenv'
