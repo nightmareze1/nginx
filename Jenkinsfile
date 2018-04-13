@@ -26,9 +26,9 @@ pipeline {
         stage ('Docker build Micro-Service') {
             parallel {
                 stage ('Wodpress Nginx'){
-                    agent { label 'docker'}
+                    agent { label 'jenkins-slave'}
                     steps {
-                        sh "docker build -f Dockerfile -t ${REPO}:${COMMIT}-nginx ."
+                        sh "docker build -f Dockerfile -t ${REPO}:${COMMIT}-nginx"
                     }
                     post {
                         success {
@@ -43,7 +43,7 @@ pipeline {
         stage ('Test'){
             parallel {
                 stage ('Micro-Services'){
-                    agent { label 'docker'}
+                    agent { label 'jenkins-slave'}
                     steps {
                         sleep 20
                         sh "docker logs nginx-${BUILD_NUMBER}"
