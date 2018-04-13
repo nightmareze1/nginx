@@ -12,7 +12,7 @@ pipeline {
                    echo "${COMMIT1}"
                    TAG   = "latest"
                    NGINX = "alpine"
-                    }
+                   }
                 }
                 sh 'printenv'
             }
