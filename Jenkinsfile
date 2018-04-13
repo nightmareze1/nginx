@@ -64,7 +64,7 @@ pipeline {
                         sleep 20
                         sh "docker logs nginx-${BUILD_NUMBER}"
                         // External
-                        sh "docker run -d --name 'nginx-${BUILD_NUMBER}' --network wordpress-micro-${BUILD_NUMBER} ${REPO}:${COMMIT}-nginx bash -c 'curl -iL -X GET http://localhost'"
+                        sh "docker exec ${REPO}:${COMMIT}-nginx bash -c 'curl -iL -X GET http://localhost'"
                     }
                     post {
                         always {
