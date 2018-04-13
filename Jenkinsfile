@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        REPO = 'nightmareze1/nginx'
         PRIVATE_REPO = "${PRIVATE_REGISTRY}/${REPO}"
         DOCKER_PRIVATE = credentials('docker-private-registry')
     }
@@ -9,7 +8,7 @@ pipeline {
         stage ('Checkout') {
             steps {
                 script {
-                    COMMIT1 = ${GIT_COMMIT}
+                    COMMIT1 = "${GIT_COMMIT}"
                     echo ${COMMIT1}
                     if ("${BRANCH_NAME}" == "master"){
                         TAG   = "latest"
