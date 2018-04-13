@@ -64,7 +64,7 @@ pipeline {
                         sleep 20
                         sh "docker logs nginx-${BUILD_NUMBER}"
                         // External
-                        sh "docker run --rm --network wordpress-micro-${BUILD_NUMBER} blitznote/debootstrap-amd64:17.04 bash -c 'curl -iL -X GET http://${DOCKER_NGINX}:80'"
+                        sh "docker run -d --name 'nginx-${BUILD_NUMBER}' --network wordpress-micro-${BUILD_NUMBER} ${REPO}:${COMMIT}-nginx bash -c 'curl -iL -X GET http://localhost'"
                     }
                     post {
                         always {
