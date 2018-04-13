@@ -9,8 +9,8 @@ pipeline {
         stage ('Checkout') {
             steps {
                 script {
-                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
-                    echo $COMMIT
+                    COMMIT1 = "${GIT_COMMIT.substring(0,8)}"
+                    echo ${COMMIT1}
                     if ("${BRANCH_NAME}" == "master"){
                         TAG   = "latest"
                         NGINX = "alpine"
@@ -28,12 +28,12 @@ pipeline {
                 stage ('Wodpress Nginx'){
                     agent { label 'jenkins-slave'}
                     steps {
-                        sh "docker build -f nginx/Dockerfile -t ${REPO}:${COMMIT}-nginx nginx/"
+                        sh "docker build -f nginx/Dockerfile -t ${REPO}:${COMMIT1}-nginx nginx/"
                     }
                     post {
                         success {
                             echo 'Tag for private registry'
-                            sh "docker tag ${REPO}:${COMMIT}-nginx ${PRIVATE_REPO}:${NGINX}"
+                            sh "docker tag ${REPO}:${COMMIT1}-nginx ${PRIVATE_REPO}:${NGINX}"
                         }
                     }
                 }
