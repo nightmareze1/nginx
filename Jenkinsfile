@@ -64,7 +64,7 @@ pipeline {
                         sleep 20
                         sh "docker logs nginx-${BUILD_NUMBER}"
                         // External
-                        sh "docker start ${REPO}:${COMMIT}-nginx bash -c 'curl -iL -X GET http://localhost'"
+                        sh "docker start ${REPO}:${COMMIT}-nginx ls -l && echo 'Running container ${REPO}:${COMMIT}-nginx'"
                     }
                     post {
                         always {
