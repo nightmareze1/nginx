@@ -8,11 +8,14 @@ pipeline {
         stage ('Checkout') {
             steps {
                 script {
-		   COMMIT1 = "${GIT_COMMIT.substring(0,8)}"
-                   echo "${COMMIT1}"
-                   TAG   = "latest"
-                   NGINX = "alpine"
-                   }
+                    echo $REPO
+                    echo $PRIVATE_REPO
+                    echo $DOCKER_PRIVATE
+                    echo "${GIT_COMMIT.substring(0,8)}"
+                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
+                    TAG   = "latest"
+                    NGINX = "alpine"
+                    }
                 }
                 sh 'printenv'
             }
