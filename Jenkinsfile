@@ -9,7 +9,7 @@ pipeline {
         stage ('Checkout') {
             steps {
                 script {
-                    COMMIT1 = "${GIT_COMMIT}"
+                    COMMIT1 = ${GIT_COMMIT}
                     echo ${COMMIT1}
                     if ("${BRANCH_NAME}" == "master"){
                         TAG   = "latest"
