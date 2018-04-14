@@ -21,7 +21,7 @@ podTemplate(label: 'mypod', containers: [
                         docker pull ubuntu
                         docker tag ubuntu nightmareze1/ubuntu:${env.BUILD_NUMBER}
                         """
-                    sh "docker login -u nightmarze1 -p 3da2a54280a9c894fb551c3bc4659dfe "
+                    sh "docker login -u nightmareze1 -p 3da2a54280a9c894fb551c3bc4659dfe "
                     sh "docker push nightmareze1/ubuntu:${env.BUILD_NUMBER} "
                 }
             }
