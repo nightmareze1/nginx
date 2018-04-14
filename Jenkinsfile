@@ -17,6 +17,7 @@ podTemplate(label: 'mypod', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
                     
                     sh """
+                        printenv
                         docker pull ubuntu
                         docker tag ubuntu nightmareze1/ubuntu:${env.BUILD_NUMBER}
                         """
