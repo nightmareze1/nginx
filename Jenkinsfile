@@ -8,7 +8,7 @@ podTemplate(label: 'template', containers: [
   ]) {
     node('template') {
 
-        stage('do some Docker work') {
+        stage('build') {
             container('docker') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
@@ -26,8 +26,23 @@ podTemplate(label: 'template', containers: [
                 }
             }
         }
+        stage('Testing Docker') {
+            container('docker') {
 
-        stage('do some kubectl work') {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_HUB_USER',
+                        passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+
+                    sh """
+                        docker pull ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
+                        docker run i --rm ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} ls -l && echo Running_container_${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} "
+                        docker rmi -f ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
+		       """
+                }
+            }
+        }
+        stage('kubernetes deploy') {
             container('kubectl') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
@@ -39,7 +54,7 @@ podTemplate(label: 'template', containers: [
                 }
             }
         }
-        stage('do some helm work') {
+        stage('helm packet') {
             container('helm') {
 
                sh "helm ls"
