@@ -12,7 +12,7 @@ podTemplate(label: 'mypod', containers: [
             container('docker') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
-                        credentialsId: 'dockerhub',
+                        credentialsId: 'docke-private-registry',
                         usernameVariable: 'DOCKER_HUB_USER', 
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
                     
