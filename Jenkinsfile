@@ -21,7 +21,7 @@ podTemplate(label: 'mypod', containers: [
                         docker pull ubuntu
                         docker tag ubuntu nightmareze1/ubuntu:${env.BUILD_NUMBER}
                         """
-                    sh "docker login -u ${env.DOCKER_HUB_USER} -p ${env.DOCKER_HUB_PASSWORD} "
+                    sh "docker login -u ${env.DOCKER_HUB_USER} -p ${env.DOCKER_HUB_PASSWORD} https://index.docker.io/v1"
                     sh "docker push ${env.DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} "
                 }
             }
