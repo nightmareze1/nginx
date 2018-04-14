@@ -6,7 +6,7 @@ podTemplate(label: 'mypod', containers: [
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
-    node('mypod') {
+    node('jenkins-slave') {
 
         stage('do some Docker work') {
             container('docker') {
