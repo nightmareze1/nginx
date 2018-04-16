@@ -7,6 +7,21 @@ podTemplate(label: 'template', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
     node('template') {
+        
+        stage ('Checkout') {
+            container('docker') {
+            steps {
+                script {
+                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
+
+                    if ("${BRANCH_NAME}" == "master"){
+                        TAG   = "latest"
+                        NGINX = "nginx"
+                    }
+                }
+                sh 'printenv'
+            }
+        }
 
         stage('build') {
             container('docker') {
