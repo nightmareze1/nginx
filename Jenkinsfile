@@ -9,7 +9,7 @@ podTemplate(label: 'template', containers: [
     node('template') {
         
         stage ('Checkout') {
-            steps {
+            container('docker') {
                 script {
                     COMMIT = "${GIT_COMMIT.substring(0,8)}"
 
@@ -17,11 +17,9 @@ podTemplate(label: 'template', containers: [
                         TAG   = "latest"
                         NGINX = "nginx"
                     }
-                   }
                 }
-                sh 'printenv'
             }
-        } 
+        }
         stage('build') {
             container('docker') {
 
