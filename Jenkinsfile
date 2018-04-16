@@ -51,6 +51,7 @@ podTemplate(label: 'template', containers: [
             }
         }
         stage('kubernetes deploy') {
+        input 'Do you approve deployment?'
             container('kubectl') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
