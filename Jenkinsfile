@@ -20,7 +20,17 @@ podTemplate(label: 'template', containers: [
                         credentialsId: 'dockerhub',
                         usernameVariable: 'DOCKER_HUB_USER', 
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                    
+                   
+  			// remove::end[K8S]
+
+			env.DEPLOY_TO_PROD = input message: '', parameters: [
+				choice(
+					name: 'Deploy to prod?',
+					choices: 'no\nyes',
+					description: 'Choose "yes" if you want to deploy this build to production'
+				)
+			]
+                     
                     sh """
                         printenv
                         pwd
@@ -52,8 +62,8 @@ podTemplate(label: 'template', containers: [
         }
         stage('kubernetes deploy') {
             when {
-			environment name: 'DEPLOY_TO_STAGE_STEP_REQUIRED',
-				value: 'true'
+	            environment name: 'DEPLOY_TO_STAGE_STEP_REQUIRED',
+			value: 'true'
 	    } 
             container('kubectl') {
 
