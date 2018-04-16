@@ -45,7 +45,8 @@ podTemplate(label: 'template', containers: [
 
                     sh """
                         docker pull ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
-                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} apt-get update && apt-get install curl -y && curl http://localhost 
+                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
+                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} curl http://localhost 
                         docker rmi -f ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
 		        """
                 }
