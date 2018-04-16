@@ -7,19 +7,12 @@ podTemplate(label: 'template', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
     node('template') {
-        
-        stage ('Checkout') {
-            container('docker') {
-                script {
-                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
-
-                    if ("${BRANCH_NAME}" == "master"){
-                        TAG   = "latest"
-                        NGINX = "nginx"
-                    }
-                }
-            }
-        }
+        def myRepo = checkout scm
+    	def gitCommit = myRepo.GIT_COMMIT
+    	def gitBranch = myRepo.GIT_BRANCH
+    	def shortGitCommit = "${gitCommit[0..10]}"
+    	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+ 
         stage('build') {
             container('docker') {
 
@@ -30,9 +23,10 @@ podTemplate(label: 'template', containers: [
                     
                     sh """
                         printenv
-                        git pull
-                        ls -la > a.txt
-                        cat a.txt
+                        pwd
+                        echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+                        echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+                        cat /etc/environment
                         cat Dockerfile
                         docker build -f Dockerfile -t ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} .
                         """
