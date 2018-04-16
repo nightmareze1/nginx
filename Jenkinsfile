@@ -21,6 +21,10 @@ podTemplate(label: 'template', containers: [
                         docker pull ubuntu
                         docker tag ubuntu nightmareze1/ubuntu:${env.BUILD_NUMBER}
                         """
+                    sh 'env > env.txt' 
+			for (String i : readFile('env.txt').split("\r?\n")) {
+    			println i
+		    }			
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
                     sh "docker push ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} "
                 }
