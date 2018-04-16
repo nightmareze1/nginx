@@ -18,15 +18,10 @@ podTemplate(label: 'template', containers: [
                     
                     sh """
                         printenv
-                        docker pull ubuntu
-                        docker tag ubuntu nightmareze1/ubuntu:${env.BUILD_NUMBER}
+                        docker build -t ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} .
                         """
-                    sh 'env > env.txt' 
-			for (String i : readFile('env.txt').split("\r?\n")) {
-    			println i
-		    }			
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
-                    sh "docker push ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} "
+                    sh "docker push ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -39,9 +34,9 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
                     sh """
-                        docker pull ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
-                        docker run -i --rm ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} apt-get update && apt-get install curl -y && curl http://localhost 
-                        docker rmi -f ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
+                        docker pull ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}
+                        docker run -i --rm ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} apt-get update && apt-get install curl -y && curl http://localhost 
+                        docker rmi -f ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}
 		        """
                 }
             }
