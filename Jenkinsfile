@@ -36,7 +36,7 @@ podTemplate(label: 'template', containers: [
 
                     sh """
                         docker pull ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
-                        docker run -i --rm ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} ls -l && echo Running_container_${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
+                        docker run -i --rm ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER} curl http://localhost 
                         docker rmi -f ${DOCKER_HUB_USER}/ubuntu:${env.BUILD_NUMBER}
 		        """
                 }
