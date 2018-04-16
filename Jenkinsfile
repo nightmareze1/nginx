@@ -8,21 +8,6 @@ podTemplate(label: 'template', containers: [
   ]) {
     node('template') {
         
-        stage ('Checkout') {
-            container('docker') {
-            steps {
-                script {
-                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
-
-                    if ("${BRANCH_NAME}" == "master"){
-                        TAG   = "latest"
-                        NGINX = "nginx"
-                    }
-                }
-                sh 'printenv'
-            }
-        }
-
         stage('build') {
             container('docker') {
 
@@ -33,6 +18,10 @@ podTemplate(label: 'template', containers: [
                     
                     sh """
                         printenv
+                        pwd
+                        ls -la > a.txt
+                        cat a.txt
+                        cat Dockerfile
                         docker build -f Dockerfile -t ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} .
                         """
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
