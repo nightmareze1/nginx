@@ -62,7 +62,7 @@ podTemplate(label: 'template', containers: [
         }
         stage('kubernetes deploy') {
 	    when {
-		environment name: 'DEPLOY_TO_PROD1',
+		environment name: 'DEPLOY_TO_PROD',
 		value: 'yes'
             }
             container('kubectl') {
