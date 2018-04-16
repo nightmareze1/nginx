@@ -28,10 +28,10 @@ podTemplate(label: 'template', containers: [
                         echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
                         cat /etc/environment
                         cat Dockerfile
-                        docker build -f Dockerfile -t ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} .
+                        docker build -f Dockerfile -t ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} .
                         """
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
-                    sh "docker push ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}"
+                    sh "docker push ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -44,9 +44,9 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
                     sh """
-                        docker pull ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}
-                        docker run -i --rm ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER} apt-get update && apt-get install curl -y && curl http://localhost 
-                        docker rmi -f ${DOCKER_HUB_USER}/v.0.0.${env.BUILD_NUMBER}
+                        docker pull ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
+                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} apt-get update && apt-get install curl -y && curl http://localhost 
+                        docker rmi -f ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
 		        """
                 }
             }
