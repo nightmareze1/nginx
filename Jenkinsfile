@@ -65,6 +65,7 @@ podTemplate(label: 'template', containers: [
 		environment name: 'DEPLOY_TO_PROD',
 		value: 'yes'
             }
+            steps {
             container('kubectl') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
@@ -74,6 +75,7 @@ podTemplate(label: 'template', containers: [
                     
                     sh "kubectl get nodes"
                 }
+            }
             }
         }
         stage('helm packet') {
