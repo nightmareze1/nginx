@@ -18,7 +18,7 @@ podTemplate(label: 'template', containers: [
                     
                     sh """
                         printenv
-                        cd ..
+                        cd ${WORKSPACE}@tmp
                         pwd
                         ls -la > a.txt
                         cat a.txt
