@@ -8,6 +8,20 @@ podTemplate(label: 'template', containers: [
   ]) {
     node('template') {
         
+        stage ('Checkout') {
+            steps {
+                script {
+                    COMMIT = "${GIT_COMMIT.substring(0,8)}"
+
+                    if ("${BRANCH_NAME}" == "master"){
+                        TAG   = "latest"
+                        NGINX = "nginx"
+                    }
+                   }
+                }
+                sh 'printenv'
+            }
+        } 
         stage('build') {
             container('docker') {
 
