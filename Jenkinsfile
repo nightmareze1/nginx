@@ -18,8 +18,7 @@ podTemplate(label: 'template', containers: [
                     
                     sh """
                         printenv
-                        cd ${WORKSPACE}@tmp
-                        pwd
+                        git pull
                         ls -la > a.txt
                         cat a.txt
                         cat Dockerfile
