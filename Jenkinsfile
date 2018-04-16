@@ -44,8 +44,7 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
                     sh """
-                        docker pull ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
-                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} curl http://localhost 
+                        docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} ls -la 
                         docker rmi -f ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
 		        """
                 }
