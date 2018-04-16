@@ -51,7 +51,6 @@ podTemplate(label: 'template', containers: [
             }
         }
         stage('kubernetes deploy') {
-            steps {
             container('kubectl') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
@@ -61,7 +60,6 @@ podTemplate(label: 'template', containers: [
                     
                     sh "kubectl get nodes"
                 }
-            }
             }
         }
         stage('helm packet') {
