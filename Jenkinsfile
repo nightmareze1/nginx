@@ -15,11 +15,7 @@ def notifySlack(text, channel, attachments) {
         attachments: attachments
     ])
 
-    sh """
-        apt-get update
-        apt-get install curl -y
-        curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}
-        """
+    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
 
 podTemplate(label: 'template', containers: [
@@ -106,7 +102,9 @@ podTemplate(label: 'template', containers: [
             }
         }
         stage("Post to Slack") {
-            notifySlack("Success!", slackNotificationChannel, [])
-        }
+            container('docker') {
+            	notifySlack("Success!", slackNotificationChannel, [])
+            } 
+	}
     }
 }
