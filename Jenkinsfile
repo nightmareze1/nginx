@@ -64,7 +64,7 @@ podTemplate(label: 'template', containers: [
                         ls -la >> path.txt
                         cat path.txt
                         bash gke.sh
-                        "
+                        """
                     sh """
                         kubectl apply -f template/deployment.yml
                         kubectl apply -f template/svc.yml
