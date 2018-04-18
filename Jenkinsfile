@@ -13,7 +13,6 @@ podTemplate(label: 'template', containers: [
         def shortGitCommit = "${gitCommit[0..10]}"
         def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
  
-    stages {
         stage('build') {
             container('docker') {
 
