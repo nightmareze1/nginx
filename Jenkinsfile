@@ -4,17 +4,15 @@ import groovy.json.JsonOutput
 
 def slackNotificationChannel = 'random'     // ex: = "builds"
 
-def notifySlack(text, channel, attachments) {
+def notifySlack(text, channel) {
     def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
 
     def payload = JsonOutput.toJson([text: text,
         channel: channel,
         username: "Jenkins",
-        icon_url: jenkinsIcon,
-        attachments: attachments
+        icon_url: jenkinsIcon
     ])
-
     sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
 
