@@ -13,28 +13,6 @@ podTemplate(label: 'template', containers: [
         def shortGitCommit = "${gitCommit[0..10]}"
         def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
  
-        stages {
-            stage ('Start') {
-              steps {
-                // send build started notifications
-                slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-
-                // send to HipChat
-                hipchatSend (color: 'YELLOW', notify: true,
-                    message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
-                  )
-
-                // send to email
-                emailext (
-                    subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                      <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-                    recipientProviders: [[$class: 'DevelopersRecipientProvider']]
-                  )
-              }
-            }
-            /* ... unchanged ... */
-        }
         stage('build') {
             container('docker') {
 
@@ -103,7 +81,23 @@ podTemplate(label: 'template', containers: [
                sh "helm ls"
             }
         }
+        post {
+            always {
+                echo 'Run regardless of the completion status of the Pipeline run.'
+            }
+            changed {
+                echo 'Only run if the current Pipeline run has a different status from the previously completed Pipeline.'
+            }
+            success {
+                echo 'Only run if the current Pipeline has a "success" status, typically denoted in the web UI with a blue or green indication.'
+
+            }
+            unstable {
+                echo 'Only run if the cu<rrent Pipeline has an "unstable" status, usually caused by test failures, code violations, etc. Typically denoted in the web UI with a yellow indication.'
+            }
+            aborted {
+                echo 'Only run if the current Pipeline has an "aborted" status, usually due to the Pipeline being manually aborted. Typically denoted in the web UI with a gray indication.'
+            }
+        }
     }
 }
-
-
