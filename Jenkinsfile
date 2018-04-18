@@ -7,7 +7,7 @@ import groovy.json.JsonOutput
 def slackNotificationChannel = 'random'     // ex: = "builds"
 
 def notifySlack(text, channel, attachments) {
-    def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
+    def slackURL = 'https://hooks.slack.com/services/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'
     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
 
     def payload = JsonOutput.toJson([text: text,
@@ -21,7 +21,7 @@ def notifySlack(text, channel, attachments) {
 }
 
 node {
-    stage("Post to Slack") {
+    stage("Start Job nginx-prd") {
         notifySlack("Success!", slackNotificationChannel, [])
     }
 }
