@@ -63,7 +63,9 @@ podTemplate(label: 'template', containers: [
                         pwd > path.txt
                         ls -la >> path.txt
                         cat path.txt
-                        bash gke.sh
+                        sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
+                        sed -i "s/<REPO>/${DOCKER_HUB_USER}/" template/deployment.yml
+                        sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                         """
                     sh """
                         kubectl apply -f template/deployment.yml
