@@ -12,16 +12,16 @@ podTemplate(label: 'template', containers: [
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "${gitCommit[0..10]}"
         def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
- 
+
         stages {
             stage('build') {
                 container('docker') {
 
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding',
                             credentialsId: 'dockerhub',
-                            usernameVariable: 'DOCKER_HUB_USER', 
+                            usernameVariable: 'DOCKER_HUB_USER',
                             passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                       
+
                         sh """
                             printenv
                             pwd
@@ -36,6 +36,24 @@ podTemplate(label: 'template', containers: [
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            echo 'Run regardless of the completion status of the Pipeline run.'
+        }
+        changed {
+            echo 'Only run if the current Pipeline run has a different status from the previously completed Pipeline.'
+        }
+        success {
+            echo 'Only run if the current Pipeline has a "success" status, typically denoted in the web UI with a blue or green indication.'
+
+        }
+        unstable {
+            echo 'Only run if the current Pipeline has an "unstable" status, usually caused by test failures, code violations, etc. Typically denoted in the web UI with a yellow indication.'
+        }
+        aborted {
+            echo 'Only run if the current Pipeline has an "aborted" status, usually due to the Pipeline being manually aborted. Typically denoted in the web UI with a gray indication.'
         }
     }
 }
