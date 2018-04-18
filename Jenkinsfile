@@ -19,6 +19,13 @@ def notifySlack(text, channel, attachments) {
 
     sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
+
+node {
+    stage("Post to Slack") {
+        notifySlack("Success!", slackNotificationChannel, [])
+    }
+}
+
 podTemplate(label: 'template', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
@@ -102,8 +109,5 @@ podTemplate(label: 'template', containers: [
                sh "helm ls"
             }
         }
-    	stage("Post to Slack") {
-            notifySlack("Success!", slackNotificationChannel, [])
-    	}	
     }
 }
