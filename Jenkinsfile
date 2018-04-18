@@ -44,7 +44,7 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
                     sh """
-                        docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la 
+                        docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la /usr/share/nginx/html && cat index.html 
                         docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
 		        """
                 }
