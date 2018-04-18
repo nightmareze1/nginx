@@ -12,14 +12,7 @@ podTemplate(label: 'template', containers: [
     	def gitBranch = myRepo.GIT_BRANCH
     	def shortGitCommit = "${gitCommit[0..10]}"
     	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-
-        stage ('Start') {
-          steps {
-            // send build started notifications
-            slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-
-          }
-        }
+ 
         stage('build') {
             container('docker') {
 
@@ -87,15 +80,6 @@ podTemplate(label: 'template', containers: [
 
                sh "helm ls"
             }
-        }
-        post {
-          success {
-            slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-
-          }
-          failure {
-            slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-          }
         }
     }
 }
