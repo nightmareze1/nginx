@@ -2,7 +2,7 @@
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = 'random'     // ex: = "builds"
+def slackNotificationChannel = 'random'
 
 def notifySlack(text, channel, attachments) {
     def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
@@ -15,7 +15,11 @@ def notifySlack(text, channel, attachments) {
         attachments: attachments
     ])
 
-    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
+    sh """
+        apt-get update
+        apt-get install curl -y
+        curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}
+        """
 }
 
 podTemplate(label: 'template', containers: [
