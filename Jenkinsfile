@@ -13,27 +13,25 @@ podTemplate(label: 'template', containers: [
         def shortGitCommit = "${gitCommit[0..10]}"
         def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
 
-        stages {
-            stage('build') {
-                container('docker') {
+        stage('build') {
+            container('docker') {
 
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                            credentialsId: 'dockerhub',
-                            usernameVariable: 'DOCKER_HUB_USER',
-                            passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_HUB_USER',
+                        passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
-                        sh """
-                            printenv
-                            pwd
-                            echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
-                            echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
-                            cat /etc/environment
-                            cat Dockerfile
-                            docker build -f Dockerfile -t ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} .
-                            """
-                        sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
-                        sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
-                    }
+                    sh """
+                        printenv
+                        pwd
+                        echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+                        echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+                        cat /etc/environment
+                        cat Dockerfile
+                        docker build -f Dockerfile -t ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} .
+                        """
+                    sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
+                    sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -57,3 +55,4 @@ podTemplate(label: 'template', containers: [
         }
     }
 }
+
