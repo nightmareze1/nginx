@@ -2,8 +2,6 @@
 
 import groovy.json.JsonOutput
 
-import groovy.json.JsonOutput
-
 def slackNotificationChannel = 'random'     // ex: = "builds"
 
 def notifySlack(text, channel, attachments) {
@@ -22,7 +20,7 @@ def notifySlack(text, channel, attachments) {
 
 node {
     stage("Start Job nginx-prd") {
-        notifySlack("Success!", slackNotificationChannel, [])
+        notifySlack("start job nginx-prd - success!", slackNotificationChannel, [])
     }
 }
 
@@ -111,3 +109,10 @@ podTemplate(label: 'template', containers: [
         }
     }
 }
+
+node {
+    stage("End job nginx-prd") {
+        notifySlack("End job nginx-prd - success!", slackNotificationChannel, [])
+    }
+}
+
