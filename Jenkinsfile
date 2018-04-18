@@ -4,10 +4,10 @@ import groovy.json.JsonOutput
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = '[randon]'     // ex: = "builds"
+def slackNotificationChannel = 'random'     // ex: = "builds"
 
 def notifySlack(text, channel, attachments) {
-    def slackURL = '[https://itshell.slack.com/services/hooks/jenkins-ci/]'
+    def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
 
     def payload = JsonOutput.toJson([text: text,
