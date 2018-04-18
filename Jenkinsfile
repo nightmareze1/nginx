@@ -2,6 +2,22 @@
 
 import groovy.json.JsonOutput
 
+def slackNotificationChannel = '[CHANNEL_NAME]'     // ex: = "builds"
+
+def notifySlack(text, channel, attachments) {
+    def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
+    def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
+
+    def payload = JsonOutput.toJson([text: text,
+        channel: #random,
+        username: "Jenkins",
+        icon_url: jenkinsIcon,
+        attachments: attachments
+    ])
+
+    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
+}
+
 podTemplate(label: 'template', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
@@ -85,6 +101,8 @@ podTemplate(label: 'template', containers: [
                sh "helm ls"
             }
         }
+        stage("Post to Slack") {
+            notifySlack("Success!", slackNotificationChannel, [])
+        }
     }
 }
-
