@@ -2,7 +2,7 @@
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = 'random'     // ex: = "builds"
+def slackNotificationChannel = 'random'
 
 def notifySlack(text, channel, attachments) {
     def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
@@ -102,8 +102,9 @@ podTemplate(label: 'template', containers: [
             }
         }
         stage("Post to Slack") {
-            notifySlack("Success!", slackNotificationChannel, [])
-    	}   
+            container('docker') {
+            	notifySlack("Success!", slackNotificationChannel, [])
+            } 
+	}
     }
 }
-
