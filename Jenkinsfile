@@ -2,7 +2,7 @@
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = 'random'
+def slackNotificationChannel = 'random' // ex: = "builds"
 
 def notifySlack(text, channel, attachments) {
     def slackURL = 'https://itshell.slack.com/services/hooks/jenkins-ci/'
