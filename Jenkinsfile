@@ -59,7 +59,12 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
                     
                     sh "kubectl get nodes"
-                    sh "./gke"
+                    sh """
+                        pwd > path.txt
+                        ls -la >> path.txt
+                        cat path.txt
+                        bash gke.sh
+                        "
                     sh """
                         kubectl apply -f template/deployment.yml
                         kubectl apply -f template/svc.yml
