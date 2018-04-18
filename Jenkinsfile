@@ -31,7 +31,7 @@ podTemplate(label: 'template', containers: [
                         docker build -f Dockerfile -t ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} .
                         """
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
-                    sh "docker push ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}"
+                    sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -45,13 +45,12 @@ podTemplate(label: 'template', containers: [
 
                     sh """
                         docker run -i --rm ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER} ls -la 
-                        docker rmi -f ${DOCKER_HUB_USER}/v0.0.${env.BUILD_NUMBER}
+                        docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
 		        """
                 }
             }
         }
         stage('kubernetes deploy') {
-        input 'Do you approve deployment?'
             container('kubectl') {
 
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', 
@@ -60,6 +59,12 @@ podTemplate(label: 'template', containers: [
                         passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
                     
                     sh "kubectl get nodes"
+                    sh "./gke"
+                    sh """
+                        kubectl apply -f template/deployment.yml
+                        kubectl apply -f template/svc.yml
+                        kubectl apply -f template/ing.yml
+                        """
                 }
             }
         }
