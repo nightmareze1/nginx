@@ -64,7 +64,7 @@ podTemplate(label: 'template', containers: [
                         ls -la >> path.txt
                         cat path.txt
                         sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
-                        sed -i "s/<REPO>/${DOCKER_HUB_USER}/" template/deployment.yml
+                        sed -i "s/<REPO>/nightmareze1/" template/deployment.yml
                         sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                         """
                     sh """
