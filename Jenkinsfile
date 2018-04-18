@@ -102,7 +102,7 @@ podTemplate(label: 'template', containers: [
             }
         }
     	stage("Post to Slack") {
-        	notifySlack("Success!", slackNotificationChannel, [])
+            notifySlack("Success!", slackNotificationChannel, [])
     	}	
     }
 }
