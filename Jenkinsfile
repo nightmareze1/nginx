@@ -1,4 +1,6 @@
-#!groovy
+#!/usr/bin/env groovy
+
+import groovy.json.JsonOutput
 
 def slackNotificationChannel = 'random'     // ex: = "builds"
 
