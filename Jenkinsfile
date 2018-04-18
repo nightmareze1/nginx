@@ -20,7 +20,7 @@ def notifySlack(text, channel, attachments) {
 
 node {
     stage("Start Job nginx-prd") {
-        notifySlack("start job nginx-prd - success!", slackNotificationChannel, [])
+        notifySlack("Start nginx-deploy-prd - success!", slackNotificationChannel, [])
     }
 }
 
@@ -112,7 +112,7 @@ podTemplate(label: 'template', containers: [
 
 node {
     stage("End job nginx-prd") {
-        notifySlack("End job nginx-prd - success!", slackNotificationChannel, [])
+        notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
     }
 }
 
