@@ -107,18 +107,14 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-            stage('buildsuccess') {
-                container('curl') { 
-                    notifySlack("build success", "random",
-                        [[
-                            title: "nginx-build ${env.BUILD_NUMBER}",
-                            color: buildColor,
-                            text: """${buildEmoji} Build ${buildStatus}.
-                            |${env.BUILD_URL}
-                            |branch: ${env.BRANCH_NAME}""".stripMargin()
-                        ]])
-                }
-            }
+            notifySlack("build failed", "random",
+                    [[
+                        title: "nginx-failed build ${env.BUILD_NUMBER}",
+                        color: "danger",
+                        text: """:dizzy_face: Build finished with error. 
+                        |${env.BUILD_URL}
+                        |branch: ${env.BRANCH_NAME}""".stripMargin()
+                    ]])
         } catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
