@@ -103,7 +103,7 @@ podTemplate(label: 'template', containers: [
             stage('helm packet') {
             notifySlack("${buildStatus}", "#random",
                 [[
-                    title: "${DOCKER_HUB_USER} build ${env.BUILD_NUMBER}",
+                    title: "nginx build ${env.BUILD_NUMBER}",
                     color: buildColor,
                     text: """${buildEmoji} Build ${buildStatus}. 
                     |${env.BUILD_URL}
@@ -119,7 +119,7 @@ podTemplate(label: 'template', containers: [
             //for public channels don't forget the # (hash)
             notifySlack("build failed", "#random",
                 [[
-                    title: "${DOCKER_HUB_USER} build ${env.BUILD_NUMBER}",
+                    title: "nginx build ${env.BUILD_NUMBER}",
                     color: "danger",
                     text: """:dizzy_face: Build finished with error. 
                     |${env.BUILD_URL}
