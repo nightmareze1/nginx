@@ -115,7 +115,7 @@ podTemplate(label: 'template', containers: [
 
         notifySlack("${buildStatus}", "random",
             [[
-        	title: "nginx-success Build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+        	title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                 color: "good",
                 text: """${buildEmoji} Build ${buildStatus}. 
                 |${env.BUILD_URL}
