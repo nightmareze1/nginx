@@ -2,8 +2,6 @@
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = 'random'     // ex: = "builds"
-
 def notifySlack(text, channel, attachments) {
     def slackURL = 'https://hooks.slack.com/services/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'
     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
@@ -20,6 +18,7 @@ def notifySlack(text, channel, attachments) {
 
 node {
     stage("Start Job nginx-prd") {
+	def slackNotificationChannel = 'random'
         notifySlack("Start nginx-deploy-prd - success!", slackNotificationChannel, [])
     }
 }
@@ -38,7 +37,8 @@ podTemplate(label: 'template', containers: [
     	def gitBranch = myRepo.GIT_BRANCH
     	def shortGitCommit = "${gitCommit[0..10]}"
     	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
- 
+	def slackNotificationChannel = 'random'
+
         stage('build') {
             container('docker') {
 
@@ -112,6 +112,7 @@ podTemplate(label: 'template', containers: [
 
 node {
     stage("End job nginx-prd") {
+  	def slackNotificationChannel = 'random'
         notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
     }
 }
