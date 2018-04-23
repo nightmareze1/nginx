@@ -101,25 +101,25 @@ podTemplate(label: 'template', containers: [
                 }
             }
             stage('helm packet') {
-                container('helm') {
-
-                   sh "helm ls"
-                }
-            notifySlack("${buildStatus}", "#build-channel",
+            notifySlack("${buildStatus}", "#random",
                 [[
-                    title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                    title: "${DOCKER_HUB_USER} build ${env.BUILD_NUMBER}",
                     color: buildColor,
                     text: """${buildEmoji} Build ${buildStatus}. 
                     |${env.BUILD_URL}
                     |branch: ${env.BRANCH_NAME}""".stripMargin()
                 ]])
+                container('helm') {
+
+                   sh "helm ls"
+                }
             }
         } catch (e) {
             //modify #build-channel to the build channel you want
             //for public channels don't forget the # (hash)
-            notifySlack("build failed", "#build-channel",
+            notifySlack("build failed", "#random",
                 [[
-                    title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                    title: "${DOCKER_HUB_USER} build ${env.BUILD_NUMBER}",
                     color: "danger",
                     text: """:dizzy_face: Build finished with error. 
                     |${env.BUILD_URL}
