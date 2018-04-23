@@ -105,6 +105,7 @@ podTemplate(label: 'template', containers: [
 
                    sh "helm ls"
                 }
+            }
             notifySlack("${buildStatus}", "#random",
                 [[
                     title: "nginx build ${env.BUILD_NUMBER}",
@@ -113,11 +114,10 @@ podTemplate(label: 'template', containers: [
                     |${env.BUILD_URL}
                     |branch: ${env.BRANCH_NAME}""".stripMargin()
                 ]])
-            }
         } catch (e) {
             //modify #build-channel to the build channel you want
             //for public channels don't forget the # (hash)
-            notifySlack("build failed", "#random",
+            notifySlack("build failed", "random",
                 [[
                     title: "nginx build ${env.BUILD_NUMBER}",
                     color: "danger",
