@@ -107,9 +107,16 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-	sh "apt-get install curl -y"
-        notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
-        } catch (e) {
+    notifySlack("build success", "random",
+        [[
+    	title: "nginx-success build ${env.BUILD_NUMBER}",
+            color: "danger",
+            text: """:dizzy_face: Build finished with error.
+            |${env.BUILD_URL}
+            |branch: ${env.BRANCH_NAME}""".stripMargin()
+        ]])
+    } 
+	catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
                 //for public channels don't forget the # (hash)
