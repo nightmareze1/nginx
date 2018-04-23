@@ -107,14 +107,7 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-            notifySlack("build success", "random",
-                    [[
-                        title: "nginx-success build ${env.BUILD_NUMBER}",
-                        color: "danger",
-                        text: """:dizzy_face: Build finished with error. 
-                        |${env.BUILD_URL}
-                        |branch: ${env.BRANCH_NAME}""".stripMargin()
-                    ]])
+        notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
         } catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
