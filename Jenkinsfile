@@ -108,11 +108,16 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-        notifySlack("build success", "random",
+        def buildColor = currentBuild.result == null? "good": "warning"
+        def buildStatus = currentBuild.result == null? "Success": currentBuild.result
+        //configure emoji, because that's what millenials do
+        def buildEmoji = currentBuild.result == null? ":smirk:":":cold_sweat:"
+
+        notifySlack("${buildStatus}", "random",
             [[
         	title: "nginx- build ${env.BUILD_NUMBER}",
-                color: "danger",
-                text: """:dizzy_face: Build finished with error.
+                color: "buildColor",
+                text: """${buildEmoji} Build ${buildStatus}. 
                 |${env.BUILD_URL}
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
