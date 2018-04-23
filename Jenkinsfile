@@ -106,6 +106,7 @@ podTemplate(label: 'template', containers: [
                 container('helm') {
 
                    sh "helm ls"
+		   sh "curl -XGET asdaskdoaskdasodas,cxlxvxcvvxcvxcv."
                 }
             }
         def buildColor = currentBuild.result == null? "good": "warning"
