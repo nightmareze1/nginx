@@ -115,4 +115,3 @@ node {
         notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
     }
 }
-
