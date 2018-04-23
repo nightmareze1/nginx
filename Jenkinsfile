@@ -107,6 +107,7 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
+	    sh "apt-get update && apt-get install curl -y"
             notifySlack("build failed", "random",
                     [[
                         title: "nginx-failed build ${env.BUILD_NUMBER}",
