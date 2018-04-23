@@ -4,16 +4,19 @@ import groovy.json.JsonOutput
 import java.util.Optional
 
 def notifySlack(text, channel, attachments) {
-    def slackURL = 'https://hooks.slack.com/services/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'
+
+    //your  slack integration url
+    def slackURL = 'https://hooks.slack.com/services/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' 
+    //from the jenkins wiki, you can updload an avatar and
+    //use that one
     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
-
-    def payload = JsonOutput.toJson([text: text,
-        channel: channel,
-        username: "Jenkins",
-        icon_url: jenkinsIcon,
-        attachments: attachments
-    ])
-
+    
+    def payload = JsonOutput.toJson([text      : text,
+                                     channel   : channel,
+                                     username  : "jenkins",
+                                     icon_url: jenkinsIcon,
+                                     attachments: attachments])
+                                     
     sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
 }
 
@@ -32,7 +35,7 @@ podTemplate(label: 'template', containers: [
     	def gitBranch = myRepo.GIT_BRANCH
     	def shortGitCommit = "${gitCommit[0..10]}"
     	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-	def slackNotificationChannel = 'random'
+	    def slackNotificationChannel = 'random'
     //this try if for build failures
     try {
             stage('build') {
@@ -101,7 +104,8 @@ podTemplate(label: 'template', containers: [
                 container('helm') {
 
                    sh "helm ls"
-                notifySlack("${buildStatus}", "#random",
+                }
+                notifySlack("${buildStatus}", "#build-channel",
                     [[
                         title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
                         color: buildColor,
@@ -109,12 +113,11 @@ podTemplate(label: 'template', containers: [
                         |${env.BUILD_URL}
                         |branch: ${env.BRANCH_NAME}""".stripMargin()
                     ]])
-                }
             }
         } catch (e) {
             //modify #build-channel to the build channel you want
             //for public channels don't forget the # (hash)
-            notifySlack("build failed", "#random",
+            notifySlack("build failed", "#build-channel",
                 [[
                     title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
                     color: "danger",
