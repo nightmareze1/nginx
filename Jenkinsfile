@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 import groovy.json.JsonOutput
+import java.util.Optional
 
 def notifySlack(text, channel, attachments) {
     def slackURL = 'https://hooks.slack.com/services/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'
@@ -25,96 +26,103 @@ podTemplate(label: 'template', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
     node('template') {
-        try {
-                def myRepo = checkout scm
-            	def gitCommit = myRepo.GIT_COMMIT
-            	def gitBranch = myRepo.GIT_BRANCH
-            	def shortGitCommit = "${gitCommit[0..10]}"
-            	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-        	    def slackNotificationChannel = 'random'
 
-                stage('build') {
-                    container('docker') {
+        def myRepo = checkout scm
+    	def gitCommit = myRepo.GIT_COMMIT
+    	def gitBranch = myRepo.GIT_BRANCH
+    	def shortGitCommit = "${gitCommit[0..10]}"
+    	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+	def slackNotificationChannel = 'random'
+    //this try if for build failures
+    try {
+            stage('build') {
+                container('docker') {
 
-                        withCredentials([[$class: 'UsernamePasswordMultiBinding', 
-                                credentialsId: 'dockerhub',
-                                usernameVariable: 'DOCKER_HUB_USER', 
-                                passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                           
-                            sh """
-                                printenv
-                                pwd
-                                echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
-                                echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
-                                cat /etc/environment
-                                cat Dockerfile
-                                docker build -f Dockerfile -t ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} .
-                                """
-                            sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
-                            sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
-                        }
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                            credentialsId: 'dockerhub',
+                            usernameVariable: 'DOCKER_HUB_USER', 
+                            passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                       
+                        sh """
+                            printenv
+                            pwd
+                            echo "GIT_BRANCH=${gitBranch}" >> /etc/environment
+                            echo "GIT_COMMIT=${gitCommit}" >> /etc/environment
+                            cat /etc/environment
+                            cat Dockerfile
+                            docker build -f Dockerfile -t ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} .
+                            """
+                        sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
+                        sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
                     }
                 }
-                stage('Testing Docker') {
-                    container('docker') {
+            }
+            stage('Testing Docker') {
+                container('docker') {
 
-                        withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                                credentialsId: 'dockerhub',
-                                usernameVariable: 'DOCKER_HUB_USER',
-                                passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                            credentialsId: 'dockerhub',
+                            usernameVariable: 'DOCKER_HUB_USER',
+                            passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
 
-                            sh """
-                                docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la /usr/share/nginx/html  
-                                docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
-        		        """
-                        }
+                        sh """
+                            docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la /usr/share/nginx/html  
+                            docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
+    		        """
                     }
                 }
-                stage('kubernetes deploy') {
-                    container('kubectl') {
+            }
+            stage('kubernetes deploy') {
+                container('kubectl') {
 
-                        withCredentials([[$class: 'UsernamePasswordMultiBinding', 
-                                credentialsId: 'docker-private-registry',
-                                usernameVariable: 'DOCKER_HUB_USER',
-                                passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                            
-                            sh "kubectl get nodes"
-                            sh """
-                                pwd > path.txt
-                                ls -la >> path.txt
-                                cat path.txt
-                                sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
-                                sed -i "s/<REPO>/nightmareze1/" template/deployment.yml
-                                sed -i "s/<PROJECT>/nginx/" template/deployment.yml
-                                """
-                            sh """
-                                kubectl apply -f template/deployment.yml
-                                kubectl apply -f template/svc.yml
-                                kubectl apply -f template/ing.yml
-                                """
-                        }
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                            credentialsId: 'docker-private-registry',
+                            usernameVariable: 'DOCKER_HUB_USER',
+                            passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                        
+                        sh "kubectl get nodes"
+                        sh """
+                            pwd > path.txt
+                            ls -la >> path.txt
+                            cat path.txt
+                            sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
+                            sed -i "s/<REPO>/nightmareze1/" template/deployment.yml
+                            sed -i "s/<PROJECT>/nginx/" template/deployment.yml
+                            """
+                        sh """
+                            kubectl apply -f template/deployment.yml
+                            kubectl apply -f template/svc.yml
+                            kubectl apply -f template/ing.yml
+                            """
                     }
                 }
-                stage('helm packet') {
-                    container('helm') {
+            }
+            stage('helm packet') {
+                container('helm') {
 
-                       sh "helm ls"
-                    }
-                }
-            } catch (e) {
-                //modify #build-channel to the build channel you want
-                //for public channels don't forget the # (hash)
-                notifySlack("build failed", "#build-channel",
+                   sh "helm ls"
+                notifySlack("${buildStatus}", "#random",
                     [[
                         title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-                        color: "danger",
-                        text: """:dizzy_face: Build finished with error. 
+                        color: buildColor,
+                        text: """${buildEmoji} Build ${buildStatus}. 
                         |${env.BUILD_URL}
                         |branch: ${env.BRANCH_NAME}""".stripMargin()
                     ]])
-                throw e
+                }
             }
-         
+        } catch (e) {
+            //modify #build-channel to the build channel you want
+            //for public channels don't forget the # (hash)
+            notifySlack("build failed", "#random",
+                [[
+                    title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                    color: "danger",
+                    text: """:dizzy_face: Build finished with error. 
+                    |${env.BUILD_URL}
+                    |branch: ${env.BRANCH_NAME}""".stripMargin()
+                ]])
+            throw e
         }
     }
 }
