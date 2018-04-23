@@ -101,18 +101,18 @@ podTemplate(label: 'template', containers: [
                 }
             }
             stage('helm packet') {
-            notifySlack("${buildStatus}", "#random",
-                [[
-                    title: "nginx build ${env.BUILD_NUMBER}",
-                    color: buildColor,
-                    text: """${buildEmoji} Build ${buildStatus}. 
-                    |${env.BUILD_URL}
-                    |branch: ${env.BRANCH_NAME}""".stripMargin()
-                ]])
                 container('helm') {
 
                    sh "helm ls"
                 }
+            notifySlack("${buildStatus}", "#random",
+                [[
+                    title: "nginx build ${env.BUILD_NUMBER}",
+                    color: buildColor,
+                    text: """${buildEmoji} Build ${buildStatus}.
+                    |${env.BUILD_URL}
+                    |branch: ${env.BRANCH_NAME}""".stripMargin()
+                ]])
             }
         } catch (e) {
             //modify #build-channel to the build channel you want
