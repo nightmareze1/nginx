@@ -24,6 +24,7 @@ podTemplate(label: 'template', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'curl', image: ':tutum/curl:latest', command: 'cat', ttyEnabled: true)
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -31,11 +32,11 @@ podTemplate(label: 'template', containers: [
     node('template') {
 
         def myRepo = checkout scm
-    	def gitCommit = myRepo.GIT_COMMIT
-    	def gitBranch = myRepo.GIT_BRANCH
-    	def shortGitCommit = "${gitCommit[0..10]}"
-    	def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-	    def slackNotificationChannel = 'random'
+        def gitCommit = myRepo.GIT_COMMIT
+        def gitBranch = myRepo.GIT_BRANCH
+        def shortGitCommit = "${gitCommit[0..10]}"
+        def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
+        def slackNotificationChannel = 'random'
     //this try if for build failures
     try {
             stage('build') {
@@ -71,7 +72,7 @@ podTemplate(label: 'template', containers: [
                         sh """
                             docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la /usr/share/nginx/html  
                             docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
-    		        """
+                    """
                     }
                 }
             }
@@ -106,26 +107,33 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-            notifySlack("${buildStatus}", "random",
-                [[
-                    title: "nginx build ${env.BUILD_NUMBER}",
-                    color: buildColor,
-                    text: """${buildEmoji} Build ${buildStatus}.
-                    |${env.BUILD_URL}
-                    |branch: ${env.BRANCH_NAME}""".stripMargin()
-                ]])
+            stage('buildsuccess') {
+                container('curl') { 
+                    notifySlack("${buildStatus}", "random",
+                        [[
+                            title: "nginx build ${env.BUILD_NUMBER}",
+                            color: buildColor,
+                            text: """${buildEmoji} Build ${buildStatus}.
+                            |${env.BUILD_URL}
+                            |branch: ${env.BRANCH_NAME}""".stripMargin()
+                        ]])
+                }
+            }
         } catch (e) {
-            //modify #build-channel to the build channel you want
-            //for public channels don't forget the # (hash)
-            notifySlack("build failed", "random",
-                [[
-                    title: "nginx build ${env.BUILD_NUMBER}",
-                    color: "danger",
-                    text: """:dizzy_face: Build finished with error. 
-                    |${env.BUILD_URL}
-                    |branch: ${env.BRANCH_NAME}""".stripMargin()
-                ]])
-            throw e
+            container('curl') {
+                //modify #build-channel to the build channel you want
+                //for public channels don't forget the # (hash)
+                notifySlack("build failed", "random",
+                    [[
+                        title: "nginx build ${env.BUILD_NUMBER}",
+                        color: "danger",
+                        text: """:dizzy_face: Build finished with error. 
+                        |${env.BUILD_URL}
+                        |branch: ${env.BRANCH_NAME}""".stripMargin()
+                    ]])
+                throw e
+            }
         }
     }
 }
+
