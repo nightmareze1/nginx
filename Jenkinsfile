@@ -107,6 +107,7 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
+	sh "apt-get install curl -y"
         notifySlack("End nginx-deploy-prd - Success!", slackNotificationChannel, [])
         } catch (e) {
             container('curl') {
