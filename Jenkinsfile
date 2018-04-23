@@ -39,6 +39,7 @@ podTemplate(label: 'template', containers: [
         def slackNotificationChannel = 'random'
     //this try if for build failures
     try {
+        container('curl') {
             stage('build') {
                 container('docker') {
 
@@ -107,16 +108,18 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-    notifySlack("build success", "random",
-        [[
-    	title: "nginx-success build ${env.BUILD_NUMBER}",
-            color: "danger",
-            text: """:dizzy_face: Build finished with error.
-            |${env.BUILD_URL}
-            |branch: ${env.BRANCH_NAME}""".stripMargin()
-        ]])
+        notifySlack("build success", "random",
+            [[
+        	title: "nginx- build ${env.BUILD_NUMBER}",
+                color: "danger",
+                text: """:dizzy_face: Build finished with error.
+                |${env.BUILD_URL}
+                |branch: ${env.BRANCH_NAME}""".stripMargin()
+            ]])
+        }
+
     } 
-	catch (e) {
+    catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
                 //for public channels don't forget the # (hash)
