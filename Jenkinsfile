@@ -106,7 +106,7 @@ podTemplate(label: 'template', containers: [
                    sh "helm ls"
                 }
             }
-            notifySlack("${buildStatus}", "#random",
+            notifySlack("${buildStatus}", "random",
                 [[
                     title: "nginx build ${env.BUILD_NUMBER}",
                     color: buildColor,
