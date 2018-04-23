@@ -105,14 +105,14 @@ podTemplate(label: 'template', containers: [
 
                    sh "helm ls"
                 }
-                notifySlack("${buildStatus}", "#build-channel",
-                    [[
-                        title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-                        color: buildColor,
-                        text: """${buildEmoji} Build ${buildStatus}. 
-                        |${env.BUILD_URL}
-                        |branch: ${env.BRANCH_NAME}""".stripMargin()
-                    ]])
+            notifySlack("${buildStatus}", "#build-channel",
+                [[
+                    title: "${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+                    color: buildColor,
+                    text: """${buildEmoji} Build ${buildStatus}. 
+                    |${env.BUILD_URL}
+                    |branch: ${env.BRANCH_NAME}""".stripMargin()
+                ]])
             }
         } catch (e) {
             //modify #build-channel to the build channel you want
