@@ -95,6 +95,9 @@ podTemplate(label: 'template', containers: [
                             sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                             """
                         sh """
+			    cat template/deployment.yml
+			    cat template/svc.yml
+			    cat template/ing.yml
                             kubectl apply -f template/deployment.yml
                             kubectl apply -f template/svc.yml
                             kubectl apply -f template/ing.yml
