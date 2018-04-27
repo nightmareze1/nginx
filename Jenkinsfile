@@ -142,6 +142,10 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
+            stage('Deploy to [PRD]') {
+                container('curl') {
+                }
+            }
     def userInput = input(
     id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
      [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
