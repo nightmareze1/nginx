@@ -142,14 +142,6 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
-    }
-    node('template') {
-        def myRepo = checkout scm
-        def gitCommit = myRepo.GIT_COMMIT
-        def gitBranch = myRepo.GIT_BRANCH
-        def shortGitCommit = "${gitCommit[0..10]}"
-        def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
-        def slackNotificationChannel = 'random'
     try {
         container('curl') {
             stage('kubernetes deploy prd') {
