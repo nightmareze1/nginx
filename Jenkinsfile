@@ -118,7 +118,7 @@ podTemplate(label: 'template', containers: [
 
         notifySlack("${buildStatus}", "random",
             [[
-            title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+            title: "nginx-success build and deploy in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                 color: "good",
                 text: """${buildEmoji} Build ${buildStatus}. 
                 |${env.BUILD_URL}
@@ -133,7 +133,7 @@ podTemplate(label: 'template', containers: [
                 //for public channels don't forget the # (hash)
                 notifySlack("build failed", "random",
                     [[
-                        title: "nginx-failed build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                        title: "nginx-failed build and not deploy in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                         color: "danger",
                         text: """:dizzy_face: Build finished with error. 
                         |${env.BUILD_URL}
