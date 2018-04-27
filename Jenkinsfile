@@ -150,7 +150,9 @@ podTemplate(label: 'template', containers: [
                 }
             }
 	    timeout(time: 30, unit: 'SECONDS') {
-    	    def userInput =  input 'Do you approve deployment?'
+     	    def userInput = input(
+             id: 'Proceed1', message: 'Desea deployar en [PRD]?', parameters: [
+            ])
 	    }
     try {
         container('curl') {
