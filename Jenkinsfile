@@ -142,17 +142,13 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
-            stage('Promote deploy to [PRD]') {
-                container('curl') {
-                    def userInput = input(
-                     id: 'userInput', message: 'Dou\'you need deploy to PRD? Please insert confirm', parameters: [
-                     [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
-                     [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
-                    ])
-                    echo ("Env: "+userInput['env'])
-                    echo ("Target: "+userInput['target'])
-                }
-            }
+    def userInput = input(
+    id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
+     [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
+     [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
+    ])
+    echo ("Env: "+userInput['env'])
+    echo ("Target: "+userInput['target'])
     try {
         container('curl') {
             stage('kubernetes deploy prd') {
