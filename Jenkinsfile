@@ -142,32 +142,14 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
+    def userInput = input(
+     id: 'userInput', message: 'Let\'s promote?', parameters: [
+     [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'],
+     [$class: 'TextParameterDefinition', defaultValue: 'uat1', description: 'Target', name: 'target']
+    ])
+    echo ("Env: "+userInput['env'])
+    echo ("Target: "+userInput['target'])
     try {
-        userInput = input(
-            id: 'Proceed1', message: 'Was this successful?', parameters: [
-            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-            ])
-    } catch (err) {  // input false
-        def user = err.getCauses()[0].getUser()
-        userInput = false
-        echo "Aborted by: [${user}]"
-
-            container('curl') {
-                //modify #build-channel to the build channel you want
-                //for public channels don't forget the # (hash)
-                notifySlack("build failed", "random",
-                    [[
-                        title: "nginx-failed deployment [PRD] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
-                        color: "danger",
-                        text: """:dizzy_face: Build finished with error. 
-                        |${env.BUILD_URL}
-                        |branch: ${env.BRANCH_NAME}""".stripMargin()
-                    ]])
-                throw err
-            }
-        }
-    }
-    if (userInput == true) {
         container('curl') {
             stage('kubernetes deploy prd') {
                 container('kubectl') {
@@ -211,9 +193,24 @@ podTemplate(label: 'template', containers: [
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
         }
-    } else {
-        // do something else
-        echo "this was not successful"
-        currentBuild.result = 'FAILURE'
-    }       
+        } catch (err) {  // input false
+        def user = err.getCauses()[0].getUser()
+        userInput = false
+        echo "Aborted by: [${user}]"
+
+            container('curl') {
+                //modify #build-channel to the build channel you want
+                //for public channels don't forget the # (hash)
+                notifySlack("build failed", "random",
+                    [[
+                        title: "nginx-failed deployment [PRD] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                        color: "danger",
+                        text: """:dizzy_face: Build finished with error. 
+                        |${env.BUILD_URL}
+                        |branch: ${env.BRANCH_NAME}""".stripMargin()
+                    ]])
+                throw err
+            }
+        }
+    }
 }
