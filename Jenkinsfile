@@ -142,27 +142,19 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
+            stage('Promote deploy to [PRD]') {
+                container('curl') {
+                    def userInput = input(
+                     id: 'userInput', message: 'Dou\'you need deploy to PRD? Please insert confirm', parameters: [
+                     [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
+                     [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
+                    ])
+                    echo ("Env: "+userInput['env'])
+                    echo ("Target: "+userInput['target'])
+                }
+            }
     try {
-        timeout(time: 15, unit: 'SECONDS') { // change to a convenient timeout for you
-            userInput = input(
-            id: 'Proceed1', message: 'Was this successful?', parameters: [
-            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
-            ])
-        }
-    } catch(err) { // timeout reached or input false
-        def user = err.getCauses()[0].getUser()
-        if('SYSTEM' == user.toString()) { // SYSTEM means timeout.
-            didTimeout = true
-        } else {
-            userInput = false
-            echo "Aborted by: [${user}]"
-        }
-    }
         container('curl') {
-            if (didTimeout) {
-                // do something on timeout
-                echo "no input was received before timeout"
-            } else if (userInput == true) {
             stage('kubernetes deploy prd') {
                 container('kubectl') {
 
@@ -205,10 +197,24 @@ podTemplate(label: 'template', containers: [
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
         }
-        } else {
-            // do something else
-            echo "this was not successful"
-            currentBuild.result = 'FAILURE'
-        } 
+        } catch (err) {  // input false
+        def user = err.getCauses()[0].getUser()
+        userInput = false
+        echo "Aborted by: [${user}]"
+
+            container('curl') {
+                //modify #build-channel to the build channel you want
+                //for public channels don't forget the # (hash)
+                notifySlack("build failed", "random",
+                    [[
+                        title: "nginx-failed deployment [PRD] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                        color: "danger",
+                        text: """:dizzy_face: Build finished with error. 
+                        |${env.BUILD_URL}
+                        |branch: ${env.BRANCH_NAME}""".stripMargin()
+                    ]])
+                throw err
+            }
+        }
     }
 }
