@@ -151,8 +151,8 @@ podTemplate(label: 'template', containers: [
             }
 	    timeout(time: 30, unit: 'SECONDS') {
     	    def userInput = input(
-            id: 'Proceed1', message: 'Was this successful?', parameters: [
-            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
+            id: 'Proceed1', message: 'Desea deployar en [PRD]?', parameters: [
+            [$class: 'BooleanParameterDefinition', name: 'ATENCION!!!!!!!!!!!!!!!!! Usted esta por deployar en Produccion desea Proceder??']
             ])
 	    }
     try {
