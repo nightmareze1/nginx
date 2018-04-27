@@ -105,6 +105,40 @@ podTemplate(label: 'template', containers: [
                     }
                 }
             }
+        def buildColor = currentBuild.result == null? "good": "warning"
+        def buildStatus = currentBuild.result == null? "Success": currentBuild.result
+        //configure emoji, because that's what millenials do
+        def buildEmoji = currentBuild.result == null? ":smiley:":":cold_sweat:"
+
+        notifySlack("${buildStatus}", "random",
+            [[
+            title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                color: "good",
+                text: """${buildEmoji} Build ${buildStatus}. 
+                |${env.BUILD_URL}
+                |branch: ${env.BRANCH_NAME}""".stripMargin()
+            ]])
+        }
+
+    }
+    catch (e) {
+            container('curl') {
+                //modify #build-channel to the build channel you want
+                //for public channels don't forget the # (hash)
+                notifySlack("build failed", "random",
+                    [[
+                        title: "nginx-failed build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                        color: "danger",
+                        text: """:dizzy_face: Build finished with error. 
+                        |${env.BUILD_URL}
+                        |branch: ${env.BRANCH_NAME}""".stripMargin()
+                    ]])
+                throw e
+            }
+        }
+    }
+    try {
+        container('curl') { 
             stage('kubernetes deploy prd') {
                 container('kubectl') {
 
@@ -154,7 +188,7 @@ podTemplate(label: 'template', containers: [
 
         notifySlack("${buildStatus}", "random",
             [[
-        	title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+            title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                 color: "good",
                 text: """${buildEmoji} Build ${buildStatus}. 
                 |${env.BUILD_URL}
@@ -162,7 +196,7 @@ podTemplate(label: 'template', containers: [
             ]])
         }
 
-    } 
+    }
     catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
