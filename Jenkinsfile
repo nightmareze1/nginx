@@ -118,7 +118,7 @@ podTemplate(label: 'template', containers: [
 
         notifySlack("${buildStatus}", "random",
             [[
-            title: "nginx-success build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+            title: "nginx-success build and deploy in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                 color: "good",
                 text: """${buildEmoji} Build ${buildStatus}. 
                 |${env.BUILD_URL}
@@ -133,7 +133,7 @@ podTemplate(label: 'template', containers: [
                 //for public channels don't forget the # (hash)
                 notifySlack("build failed", "random",
                     [[
-                        title: "nginx-failed build nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
+                        title: "nginx-failed in build process and has not been implemented in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                         color: "danger",
                         text: """:dizzy_face: Build finished with error. 
                         |${env.BUILD_URL}
@@ -144,16 +144,20 @@ podTemplate(label: 'template', containers: [
         }
             stage('Deploy to [PRD]') {
                 container('curl') {
+ 	          echo ""
+		  echo ""
 		  echo "A continuacion seleccione si quiere deployar a PRD"
                 }
             }
     def userInput = input(
+    timeout(time: 35, unit: 'SECONDS') {
     id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
      [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
      [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
     ])
     echo ("Env: "+userInput['env'])
     echo ("Target: "+userInput['target'])
+    }
     try {
         container('curl') {
             stage('kubernetes deploy prd') {
