@@ -151,12 +151,11 @@ podTemplate(label: 'template', containers: [
             }
 	    timeout(time: 30, unit: 'SECONDS') {
     	    def userInput = input(
-    	    id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
-             [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
-             [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
+    	    id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', 
+            parameters: [booleanParam(defaultValue: true,
+	    description: 'If you like Deploy in PRD, just push the button',name: 'Yes?')]) 
             ])
-    	    echo ("Env: "+userInput['env'])
-    	    echo ("Target: "+userInput['target'])
+    	    echo ("Accion: "+userInput['Yes?'])
 	    }
     try {
         container('curl') {
