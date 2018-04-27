@@ -144,6 +144,7 @@ podTemplate(label: 'template', containers: [
         }
             stage('Deploy to [PRD]') {
                 container('curl') {
+		  echo "A continuacion seleccione si quiere deployar a PRD"
                 }
             }
     def userInput = input(
@@ -154,6 +155,8 @@ podTemplate(label: 'template', containers: [
     echo ("Env: "+userInput['env'])
     echo ("Target: "+userInput['target'])
     try {
+    userInput = true
+    echo "Proceed with Authorization by: [${user}]"
         container('curl') {
             stage('kubernetes deploy prd') {
                 container('kubectl') {
