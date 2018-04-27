@@ -200,9 +200,9 @@ podTemplate(label: 'template', containers: [
         }
         } catch (err) {  // input false
         def user = err.getCauses()[0].getUser()
-        userInput = false
-        echo "Aborted by: [${user}]"
-
+        if userInput = false
+           echo "Aborted by: [${user}]"
+	else 
             container('curl') {
                 //modify #build-channel to the build channel you want
                 //for public channels don't forget the # (hash)
