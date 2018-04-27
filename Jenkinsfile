@@ -73,7 +73,7 @@ podTemplate(label: 'template', containers: [
                         sh """
                             docker run -i --rm ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} ls -la /usr/share/nginx/html  
                             docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}
-                    """
+                            """
                     }
                 }
             }
@@ -95,16 +95,16 @@ podTemplate(label: 'template', containers: [
                             sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                             """
                         sh """
-                cat template/deployment.yml
-                cat template/svc.yml
-                cat template/ing.yml
+                            cat template/deployment.yml
+                            cat template/svc.yml
+                            cat template/ing.yml
                             kubectl apply -f template/deployment.yml
                             kubectl apply -f template/svc.yml
                             kubectl apply -f template/ing.yml
                             """
                     }
                 }
-            }
+            }        
             stage('helm packet') {
                 container('helm') {
 
@@ -124,7 +124,8 @@ podTemplate(label: 'template', containers: [
                 |${env.BUILD_URL}
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
-        }    
+        }
+
     } 
     catch (e) {
             container('curl') {
@@ -141,43 +142,41 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
-    }        
-            stage('kubernetes deploy prd') {
-                container('kubectl') {
-
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', 
-                            credentialsId: 'docker-private-registry',
-                            usernameVariable: 'DOCKER_HUB_USER',
-                            passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-                    
-                    def userInput = input(
-                     id: 'userInput', message: 'Let\'s promote?', parameters: [
-                     [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'],
-                     [$class: 'TextParameterDefinition', defaultValue: 'uat1', description: 'Target', name: 'target']
-                    ])
-                    echo ("Env: "+userInput['env'])
-                    echo ("Target: "+userInput['target'])
-                        
-                        sh "kubectl get nodes"
-                        sh """
-                            pwd > path.txt
-                            ls -la >> path.txt
-                            cat path.txt
-                            sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
-                            sed -i "s/<REPO>/nightmareze1/" template/deployment.yml
-                            sed -i "s/<PROJECT>/nginx/" template/deployment.yml
-                            """
-                        sh """
-                            cat template/deployment.yml
-                            cat template/svc.yml
-                            cat template/ing.yml
-                            kubectl apply -f template/deployment.yml
-                            kubectl apply -f template/svc.yml
-                            kubectl apply -f template/ing.yml
-                            """
-                    }
-                }
-            }            
-	}
     }
+    stage('kubernetes deploy prd') {
+        container('kubectl') {
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+                    credentialsId: 'docker-private-registry',
+                    usernameVariable: 'DOCKER_HUB_USER',
+                    passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+            
+            def userInput = input(
+             id: 'userInput', message: 'Let\'s promote?', parameters: [
+             [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'],
+             [$class: 'TextParameterDefinition', defaultValue: 'uat1', description: 'Target', name: 'target']
+            ])
+            echo ("Env: "+userInput['env'])
+            echo ("Target: "+userInput['target'])
+                
+                sh "kubectl get nodes"
+                sh """
+                    pwd > path.txt
+                    ls -la >> path.txt
+                    cat path.txt
+                    sed -i "s/<VERSION>/v0.0.${env.BUILD_NUMBER}/" template/deployment.yml
+                    sed -i "s/<REPO>/nightmareze1/" template/deployment.yml
+                    sed -i "s/<PROJECT>/nginx/" template/deployment.yml
+                    """
+                sh """
+                    cat template/deployment.yml
+                    cat template/svc.yml
+                    cat template/ing.yml
+                    kubectl apply -f template/deployment.yml
+                    kubectl apply -f template/svc.yml
+                    kubectl apply -f template/ing.yml
+                    """
+            }
+        }
+    } 
 }
