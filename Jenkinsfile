@@ -152,7 +152,7 @@ podTemplate(label: 'template', containers: [
 	    timeout(time: 30, unit: 'SECONDS') {
     	    def userInput = input(
             id: 'Proceed1', message: 'Desea deployar en [PRD]?', parameters: [
-            [$class: 'TextParameterDefinition', name: 'ATENCION!!!!!!!!!!!!!!!!! Usted esta por deployar en Produccion desea Proceder??']
+            [name: 'ATENCION!!!!!!!!!!!!!!!!! Usted esta por deployar en Produccion desea Proceder??']
             ])
 	    }
     try {
