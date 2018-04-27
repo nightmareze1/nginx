@@ -151,11 +151,9 @@ podTemplate(label: 'template', containers: [
             }
 	    timeout(time: 30, unit: 'SECONDS') {
     	    def userInput = input(
-    	    id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', 
-            parameters: [booleanParam(defaultValue: true,
-	    description: 'If you like Deploy in PRD, just push the button',name: 'Yes?')]) 
+            id: 'Proceed1', message: 'Was this successful?', parameters: [
+            [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
             ])
-    	    echo ("Accion: "+userInput['Yes?'])
 	    }
     try {
         container('curl') {
