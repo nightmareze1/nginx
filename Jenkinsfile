@@ -147,15 +147,13 @@ podTemplate(label: 'template', containers: [
 		  echo "A continuacion seleccione si quiere deployar a PRD"
                 }
             }
-            timeout(time: 30, unit: 'SECONDS') {
-    	    def userInput = input(
-            id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
-             [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
-             [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
-    	    ])
-    	    echo ("Env: "+userInput['env'])
-            echo ("Target: "+userInput['target'])
-	    }
+    def userInput = input(
+    id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
+     [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
+     [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
+    ])
+    echo ("Env: "+userInput['env'])
+    echo ("Target: "+userInput['target'])
     try {
         container('curl') {
             stage('kubernetes deploy prd') {
@@ -180,7 +178,7 @@ podTemplate(label: 'template', containers: [
                             cat template/svc.yml
                             cat template/ing.yml
                             kubectl apply -f template/deployment.yml
-                            kubectl apply -f template/svc.yml
+                            kubectl apply -f template/svc.ymlasdasdasdlaspldapsdlaspldpas
                             kubectl apply -f template/ing.yml
                             """
                     }
@@ -200,9 +198,9 @@ podTemplate(label: 'template', containers: [
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
         }
-        def user = err.getCauses()[0].getUser(i)
-        userInput = false
-        echo "Aborted by: [${user}]"
+       def user = err.getCauses()[0].getUser(i)
+       userInput = false
+       echo "Aborted by: [${user}]"
         } catch (err) {  // input false
             container('curl') {
                 //modify #build-channel to the build channel you want
