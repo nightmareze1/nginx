@@ -177,7 +177,7 @@ podTemplate(label: 'template', containers: [
                             cat template/deployment.yml
                             cat template/svc.yml
                             cat template/ing.yml
-                            kubectl apply -f template/deployment.ymlkaosdkasodkasokdasodk
+                            kubectl apply -f template/deployment.yml
                             kubectl apply -f template/svc.yml
                             kubectl apply -f template/ing.yml
                             """
