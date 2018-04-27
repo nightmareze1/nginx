@@ -148,6 +148,7 @@ podTemplate(label: 'template', containers: [
                 }
             }
     	    def userInput = input(
+	    timeout(time: 30, unit: 'SECONDS') {
             id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
              [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
              [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
@@ -201,14 +202,6 @@ podTemplate(label: 'template', containers: [
        def user = err.getCauses()[0].getUser(i)
        userInput = false
         echo "Aborted by: [${user}]"
-        notifySlack("Only Build and Deploy in [STG]", "random",
-             [[
-                title: "nginx success build and only deploy in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
-                color: "warning",
-                text: """:no_mouth: Build finished with error. 
-                |${env.BUILD_URL}
-                |branch: ${env.BRANCH_NAME}""".stripMargin()
-             ]])
         } catch (err) {  // input false
             container('curl') {
                 //modify #build-channel to the build channel you want
