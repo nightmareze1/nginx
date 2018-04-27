@@ -95,14 +95,20 @@ podTemplate(label: 'template', containers: [
                             sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                             """
                         sh """
-			    cat template/deployment.yml
-			    cat template/svc.yml
-			    cat template/ing.yml
+                cat template/deployment.yml
+                cat template/svc.yml
+                cat template/ing.yml
                             kubectl apply -f template/deployment.yml
                             kubectl apply -f template/svc.yml
                             kubectl apply -f template/ing.yml
                             """
                     }
+                }
+            }
+            stage('helm packet') {
+                container('helm') {
+
+                   sh "helm ls"
                 }
             }
         def buildColor = currentBuild.result == null? "good": "warning"
@@ -118,9 +124,8 @@ podTemplate(label: 'template', containers: [
                 |${env.BUILD_URL}
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
-        }
-
-    }
+        }    
+    } 
     catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
@@ -136,9 +141,9 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
-    }
+    }        
     try {
-        container('curl') { 
+        container('curl') {
             stage('kubernetes deploy prd') {
                 container('kubectl') {
 
@@ -165,9 +170,9 @@ podTemplate(label: 'template', containers: [
                             sed -i "s/<PROJECT>/nginx/" template/deployment.yml
                             """
                         sh """
-                cat template/deployment.yml
-                cat template/svc.yml
-                cat template/ing.yml
+                            cat template/deployment.yml
+                            cat template/svc.yml
+                            cat template/ing.yml
                             kubectl apply -f template/deployment.yml
                             kubectl apply -f template/svc.yml
                             kubectl apply -f template/ing.yml
@@ -175,12 +180,6 @@ podTemplate(label: 'template', containers: [
                     }
                 }
             }            
-            stage('helm packet') {
-                container('helm') {
-
-                   sh "helm ls"
-                }
-            }
         def buildColor = currentBuild.result == null? "good": "warning"
         def buildStatus = currentBuild.result == null? "Success": currentBuild.result
         //configure emoji, because that's what millenials do
@@ -194,9 +193,8 @@ podTemplate(label: 'template', containers: [
                 |${env.BUILD_URL}
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
-        }
-
-    }
+        } 
+    } 
     catch (e) {
             container('curl') {
                 //modify #build-channel to the build channel you want
@@ -212,5 +210,5 @@ podTemplate(label: 'template', containers: [
                 throw e
             }
         }
-    }
+    } 
 }
