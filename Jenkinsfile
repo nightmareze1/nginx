@@ -148,7 +148,7 @@ podTemplate(label: 'template', containers: [
                 }
             }
     	    def userInput = input(
-	    timeout(time: 30, unit: 'SECONDS') {
+            timeout(time: 15, unit: 'SECONDS')
             id: 'userInput', message: 'Desea deployar a [PRD]? Por favor confirme los datos del ambiente y proceda', parameters: [
              [$class: 'TextParameterDefinition', defaultValue: 'PRD', description: 'Environment', name: 'env'],
              [$class: 'TextParameterDefinition', defaultValue: 'nginx', description: 'Target', name: 'target']
