@@ -198,10 +198,10 @@ podTemplate(label: 'template', containers: [
                 |branch: ${env.BRANCH_NAME}""".stripMargin()
             ]])
         }
-        def user = err.getCauses()[0].getUser(i)
-        userInput = false
-         echo "Aborted by: [${user}]"
-         notifySlack("Only Build and Deploy in [STG]", "random",
+       def user = err.getCauses()[0].getUser(i)
+       userInput = false
+        echo "Aborted by: [${user}]"
+        notifySlack("Only Build and Deploy in [STG]", "random",
              [[
                 title: "nginx success build and only deploy in [STG] nightmareze1/nginx:v0.0.${env.BUILD_NUMBER}",
                 color: "warning",
