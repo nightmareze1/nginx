@@ -208,7 +208,9 @@ podTemplate(label: 'template', containers: [
                         |branch: ${env.BRANCH_NAME}""".stripMargin()
                     ]])
                 throw e
+            	}
             }
-        }
-    } 
+    	}	 
+    }
 }
+
