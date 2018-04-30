@@ -108,7 +108,7 @@ podTemplate(label: 'template', containers: [
             stage('helm packet') {
                 container('helm') {
 
-                   sh "helm init"
+                   sh "helm init --upgrade"
 	           sh "helm ls"
                 }
             }
