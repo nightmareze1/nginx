@@ -59,6 +59,8 @@ podTemplate(label: 'template', containers: [
                             """
                         sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
                         sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
+                        sh "docker images"
+                        sh "docker rmi -f ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
                     }
                 }
             }
