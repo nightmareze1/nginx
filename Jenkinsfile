@@ -56,6 +56,7 @@ podTemplate(label: 'template', containers: [
                             cat /etc/environment
                             cat Dockerfile
                             docker build -f Dockerfile -t ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER} .
+                            docker rmi -f $(docker images)
                             """
                         sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD} "
                         sh "docker push ${DOCKER_HUB_USER}/nginx:v0.0.${env.BUILD_NUMBER}"
