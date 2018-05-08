@@ -8,6 +8,8 @@ Mainteainer: Ezequiel Arielli e_ariel@hotmail.es
 
 *CIRCLECI example pipeline in circle.yml
 
+*Jenkinsfile groovy to build app using blueocean dashboard and send alerts to Slack(Try and cath) and deploy in k8s.
+
 *Pipeline generate Docker image:version(commit) and Upload to DockerRegistry/DockerHub
 
 *Download Docker Image from the registry and perform Deploy k8.
