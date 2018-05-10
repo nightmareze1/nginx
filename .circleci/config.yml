@@ -10,6 +10,6 @@ jobs:
 
 deployment:
   fake_deploy_for_cci2:
-    tag: /.*/
+    tag: /v[0-9]+(\.[0-9]+)*/
     commands:
       - echo "make tags run in 2.0"
