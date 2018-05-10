@@ -38,15 +38,14 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/app.tar
-      - deploy:
-          name: Push application Docker image
-          tag: /v[0-9]+(\.[0-9]+)*/
-          command: |
+deployment:
+  fake_deploy_for_cci2:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    commands:
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
            echo $CIRCLE_TAG
            docker login -u ${docker_user} -p ${docker_pass}
            docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
            docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
           fi
-
 
