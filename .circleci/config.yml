@@ -42,7 +42,8 @@ jobs:
           name: Push application Docker image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker login ${DOCKER_USER} ${DOCKER_PASS}
+              echo ${docker_user}
+              docker login ${docker_user} ${docker_pass}
               docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
               docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
             fi
