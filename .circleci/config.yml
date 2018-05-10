@@ -40,10 +40,8 @@ jobs:
             - /caches/app.tar
       - deploy:
           name: Push application Docker image
+          tag: /.*/
           command: |
-            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$"; then
-              version=$(git log -1 --pretty=%B)
-              docker login -u ${docker_user} -p ${docker_pass}
-              docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$version"
-              docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$version"
-            fi
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+           echo $CIRCLE_TAG
+          fi
