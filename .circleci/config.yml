@@ -4,6 +4,7 @@ jobs:
     machine: true
     working_directory: /home/circleci/app
     steps:
+      - checkout
       - run: echo $CIRCLE_TAG
       - run: docker login -u ${docker_user} -p ${docker_pass}
       - run: docker build -t "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG" .
