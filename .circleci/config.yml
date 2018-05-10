@@ -1,23 +1,19 @@
 version: 2
 jobs:
-  build:
+  nontest:
+    machine: true
     working_directory: /home/circleci/app
-    docker:
-      - image: docker:17.05.0-ce-git
     steps:
-      - checkout
-      - setup_remote_docker
-      - run: 
-         echo $CIRCLE_TAG
-         docker login -u ${docker_user} -p ${docker_pass}
-         docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
-         docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
+      - run: echo $CIRCLE_TAG
+      - run: docker login -u ${docker_user} -p ${docker_pass}
+      - run: docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
+      - run: docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
 
-deployment:
-  deploy_docker:
-    tag: /v[0-9]+(\.[0-9]+)*/
-    commands:
-       - docker login -u ${docker_user} -p ${docker_pass}
-       - docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
-       - docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
-
+workflows:
+  version: 2
+  build:
+    jobs:
+      - nontest:
+          filters:
+            tags:
+             only: /v[0-9]+(\.[0-9]+)*/
