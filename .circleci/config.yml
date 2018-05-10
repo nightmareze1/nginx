@@ -7,10 +7,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: echo $CIRCLE_TAG
-      - run: docker login -u ${docker_user} -p ${docker_pass}
-      - run: docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
-      - run: docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
+      - run: 
+         echo $CIRCLE_TAG
+         docker login -u ${docker_user} -p ${docker_pass}
+         docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
+         docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
 
 deployment:
   deploy_docker:
