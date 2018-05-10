@@ -4,10 +4,11 @@ jobs:
     machine: true
     steps:
       - checkout
+
       - run:
-        mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
-        chmod +x /home/ubuntu/bin/docker-build
-      - override
-      - run:
-        docker-build pull || true
-        docker-build build
+          name: Install docker-build
+          command:
+                mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
+                chmod +x /home/ubuntu/bin/docker-build
+                docker-build pull || true
+                docker-build build
