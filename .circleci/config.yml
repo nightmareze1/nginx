@@ -9,6 +9,12 @@ jobs:
           name: Install docker-build
           command:
                 mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
+          name: configure access
+          command:
                 chmod +x /home/ubuntu/bin/docker-build
+          name: check docker-build
+          command:
                 docker-build pull || true
+          name: build image docker-build
+          command:
                 docker-build build
