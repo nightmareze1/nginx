@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+        mv /home/ubuntu/docker-httpd-fpm/docker-build /home/ubuntu/bin/docker-build
+        chmod +x /home/ubuntu/bin/docker-build
+      - override
+      - run:
+        docker-build pull || true
+        docker-build build
