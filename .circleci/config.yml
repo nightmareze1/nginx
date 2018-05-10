@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-            docker build --cache-from=app -t ${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG .
+            docker build --cache-from=app -t ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1} .
       - run:
           name: Save Docker image layer cache
           command: |
@@ -40,7 +40,7 @@ jobs:
             - /caches/app.tar
       - deploy:
           name: Push application Docker image
-          tag: tag: /v[0-9]+(\.[0-9]+)*/
+          tag: /v[0-9]+(\.[0-9]+)*/
           command: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
            echo $CIRCLE_TAG
