@@ -16,3 +16,5 @@ deployment:
        - docker login -u ${docker_user} -p ${docker_pass}
        - docker tag app "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
        - docker push "vikingo/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_TAG"
+
+
