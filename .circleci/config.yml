@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build:
+    working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
     steps:
@@ -18,7 +19,7 @@ jobs:
           keys:
             - v1-{{ .Branch }}
           paths:
-            - /app.tar
+            - /caches/app.tar
       - run:
           name: Load Docker image layer cache
           command: |
@@ -36,7 +37,7 @@ jobs:
       - save_cache:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
-            - //app.tar
+            - /caches/app.tar
       - run:
           name: Run tests
           command: |
