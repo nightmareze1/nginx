@@ -110,7 +110,7 @@ podTemplate(label: 'template', containers: [
             stage('helm packet') {
                 container('helm') {
 			
-	           sh "helm ls"
+	           sh "ls"
                 }
             }
         def buildColor = currentBuild.result == null? "good": "warning"
