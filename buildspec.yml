@@ -9,7 +9,6 @@ phases:
       - IMAGE_NAME="build-miro-test"
       - REPOSITORY_URI=881653854182.dkr.ecr.us-east-1.amazonaws.com/build-miro-test
       - IMAGE_TAG=staging.$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - BUILD=$CODEBUILD_SOURCE_VERSION
       - BUILD_NUMBER=staging.$BUILD_NUMBER
   build:
     commands:
