@@ -4,19 +4,20 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws --version
       - $(aws ecr get-login --no-include-email --region us-east-1)
+      - echo "Set environment Variables"
       - IMAGE_NAME="build-miro-test"
       - REPOSITORY_URI=881653854182.dkr.ecr.us-east-1.amazonaws.com/build-miro-test
-      - IMAGE_TAG=prod_$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - PERRO=$(aws ssm get-parameters --region us-east-1 --name /CodeBuild/PERRO --with-decryption --query 'Parameters[0].Value' |tr -d '"')
+      - IMAGE_TAG=staging.$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - BUILD=$CODEBUILD_SOURCE_VERSION
+      - BUILD_NUMBER=staging.$BUILD_NUMBER
   build:
     commands:
-      - echo $PERRO
       - echo Build started on `date`
       - echo Building the Docker image...
+      - echo $BUILD_NUMBER
       - echo Image_tag $IMAGE_TAG
-      - docker build --build-arg PERRO=${PERRO} -t $REPOSITORY_URI:latest .
+      - ./get-parameters-by-path.sh /CodeBuild/conda-staging/
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG 
   post_build:
     commands:
