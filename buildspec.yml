@@ -1,6 +1,10 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - curl -fsSL https://raw.githubusercontent.com/thii/aws-codebuild-extras/master/install >> extras.sh
+      - . ./extras.sh
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -10,6 +14,8 @@ phases:
       - REPOSITORY_URI=881653854182.dkr.ecr.us-east-1.amazonaws.com/build-miro-test
       - IMAGE_TAG=staging.$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - BUILD_NUMBER=staging.$BUILD_NUMBER
+      - env
+      - echo $CODEBUILD_GIT_TAG
   build:
     commands:
       - echo Build started on `date`
