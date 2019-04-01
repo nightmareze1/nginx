@@ -17,4 +17,5 @@ for row in $(echo ${PARAMETERS} | jq -c '.Parameters' | jq -c '.[]'); do
    
 done
 
+cat vars.env | awk '{ print "docker build --build-arg BUILD_NUMBER=${BUILD_NUMBER} " $0 " -t $REPOSITORY_URI:latest ."}'
 cat vars.env | awk '{ print "docker build --build-arg BUILD_NUMBER=${BUILD_NUMBER} " $0 " -t $REPOSITORY_URI:latest ."}' |bash && rm -rf vars.env
