@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PARAMETERS=`aws ssm get-parameters-by-path --path ${1} --with-decryption`
+PARAMETERS=`aws ssm get-parameters-by-path --region us-east-1 --path ${1} --with-decryption`
 
 echo $PARAMETERS
 echo ${PARAMETERS} | jq -c '.Parameters' | jq -c '.[]'
